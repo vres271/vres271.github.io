@@ -63,7 +63,7 @@ module.exports = "<!--The content below is only a placeholder and can be replace
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" ></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n"
+module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [options]=\"controlsOptions\"></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n"
 
 /***/ }),
 
@@ -140,7 +140,7 @@ module.exports = "<nav *ngIf=\"result.items.length-s.limit>0\" aria-label=\"Page
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"svc.r.r\">\r\n  <table  class=\"mt-2 table {{!svc.ready?'not-ready':'ready'}}\" id=\"items-table\">\r\n    <thead>\r\n      <tr>\r\n        <th *ngIf=\"options.indexCol\" scope=\"col\" width=\"30px\">#</th>\r\n        <th *ngIf=\"options.logLink\" scope=\"col\" width=\"30px\"></th>\r\n        <th scope=\"col\" *ngFor=\"let fieldName of options.fieldNames\" translate>{{itemType+'.'+fieldName}}</th>\r\n        <th scope=\"col\" width=\"30px\"></th>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr \r\n        [ngClass]=\"[(item._added?'added':''),(item.b?'blocked':'')]\" \r\n        title=\"{{(item.b?('blocked '+(item.b|date : 'yyyy-MM-dd HH:mm:ss')):'')}}\"  \r\n        *ngFor=\"let item of svc.items | myFilter: s.filter | orderBy : options.orderBy | asResult : result | slice:0:s.limit ; index as i;\"\r\n        >\r\n        <th *ngIf=\"options.indexCol\" scope=\"row\">{{i+1}}</th>\r\n        <td *ngIf=\"options.logLink\"><a class=\"{{!app.log.r.d&&'disabled'}}\" href=\"\" [routerLink]=\"'/log/'+app.ref.object_types[itemType]+'/'+item.id\" title=\"Show log by this item\"><fa-icon [icon]=\"faListAlt\"></fa-icon></a></td>\r\n        <td *ngFor=\"let fieldName of options.fieldNames; index as i; \" >\r\n          <a \r\n            *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='link'\" \r\n            href=\"\" \r\n            [routerLink]=\"linkPath(item, fieldName)\" \r\n            title=\"{{'Edit'|translate}}\"\r\n            >{{item[fieldName]}}</a>\r\n          <span \r\n            *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='icon' && options.fields[fieldName].expr(item)\" \r\n            [title]=\"options.fields[fieldName].title\" \r\n            style=\"white-space: nowrap;\">\r\n            <fa-icon [icon]=\"options.fields[fieldName].icon\" class=\"{{options.fields[fieldName].classes}}\"></fa-icon>\r\n            <sup *ngIf=\"options.fields[fieldName].badge\">\r\n              <span class=\"badge badge-{{options.fields[fieldName].badge.class}}\">{{options.fields[fieldName].badge.expr(item)}}</span>\r\n            </sup>\r\n          </span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='large'\" title=\"{{item[fieldName]}}\">{{item[options.fields[fieldName].shortName]}}</span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='date'\" title=\"{{item[fieldName]|date : options.fields[fieldName].format?options.fields[fieldName].format:'yyyy-MM-dd HH:mm:ss'}}\">{{item[fieldName]|date : options.fields[fieldName].format?options.fields[fieldName].format:'yyyy-MM-dd HH:mm:ss'}}</span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='edit'\"><input type=\"text\" class=\"form-control\" [ngModel]=\"item[fieldName]\" (change)=\"save(item, fieldName, $event)\"></span>\r\n          <span *ngIf=\"!(options.fields&&options.fields[fieldName])\">{{item[fieldName]}}</span>\r\n        </td>\r\n        <td *ngIf=\"options.delBtn\"><span class=\"tomato pointer {{!(svc.r.d&&!item.b)&&'disabled'}}\" (click)=\"(svc.r.d&&!item.b)&&del(item);\" title=\"{{'Del'|translate}}\"><fa-icon [icon]=\"faTrashAlt\"></fa-icon></span></td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</div>\r\n<div  *ngIf=\"!svc.r.r\" class=\"alert alert-warning text-center\" role=\"alert\">{{'ITEMS-TABLE.Access_denied' | translate}} {{'types.'+itemType| translate}}</div>\r\n<app-items-paginator [state]=\"app.state.items[itemType]\"     [result]=\"result\"></app-items-paginator>\r\n"
+module.exports = "<div *ngIf=\"svc.r.r\">\r\n  <table  class=\"mt-2 table {{!svc.ready?'not-ready':'ready'}}\" id=\"items-table\">\r\n    <thead>\r\n      <tr>\r\n        <th *ngIf=\"options.indexCol\" scope=\"col\" width=\"30px\">#</th>\r\n        <th *ngIf=\"options.logLink\" scope=\"col\" width=\"30px\"></th>\r\n        <th scope=\"col\" *ngFor=\"let fieldName of options.fieldNames\" translate>{{itemType+'.'+fieldName}}</th>\r\n        <th scope=\"col\" width=\"30px\"></th>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr \r\n        [ngClass]=\"[(item._added?'added':''),(item.b?'blocked':'')]\" \r\n        title=\"{{(item.b?('blocked '+(item.b|date : 'yyyy-MM-dd HH:mm:ss')):'')}}\"  \r\n        *ngFor=\"let item of svc.items | myFilter: s.filter | orderBy : options.orderBy | asResult : result | slice:0:s.limit ; index as i;\"\r\n        >\r\n        <th *ngIf=\"options.indexCol\" scope=\"row\">{{i+1}}</th>\r\n        <td *ngIf=\"options.logLink\"><a class=\"{{!app.log.r.d&&'disabled'}}\" href=\"\" [routerLink]=\"'/log/'+app.ref.object_types[itemType]+'/'+item.id\" title=\"Show log by this item\"><fa-icon [icon]=\"faListAlt\"></fa-icon></a></td>\r\n        <td *ngFor=\"let fieldName of options.fieldNames; index as i; \" >\r\n          <a \r\n            *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='link'\" \r\n            href=\"\" \r\n            [routerLink]=\"linkPath(item, fieldName)\" \r\n            title=\"{{'Edit'|translate}}\"\r\n            >{{options.fields[fieldName].staticValue?options.fields[fieldName].staticValue:item[fieldName]}}</a>\r\n          <span \r\n            *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='icon' && options.fields[fieldName].expr(item)\" \r\n            [title]=\"options.fields[fieldName].title\" \r\n            style=\"white-space: nowrap;\">\r\n            <fa-icon [icon]=\"options.fields[fieldName].icon\" class=\"{{options.fields[fieldName].classes}}\"></fa-icon>\r\n            <sup *ngIf=\"options.fields[fieldName].badge\">\r\n              <span class=\"badge badge-{{options.fields[fieldName].badge.class}}\">{{options.fields[fieldName].badge.expr(item)}}</span>\r\n            </sup>\r\n          </span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='large'\" title=\"{{item[fieldName]}}\">{{item[options.fields[fieldName].shortName]}}</span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='date'\" title=\"{{item[fieldName]|date : options.fields[fieldName].format?options.fields[fieldName].format:'yyyy-MM-dd HH:mm:ss'}}\">{{item[fieldName]|date : options.fields[fieldName].format?options.fields[fieldName].format:'yyyy-MM-dd HH:mm:ss'}}</span>\r\n          <span *ngIf=\"options.fields&&options.fields[fieldName]&&options.fields[fieldName].type==='edit'\"><input type=\"text\" class=\"form-control\" [ngModel]=\"item[fieldName]\" (change)=\"save(item, fieldName, $event)\"></span>\r\n          <span *ngIf=\"!(options.fields&&options.fields[fieldName])\">{{item[fieldName]}}</span>\r\n        </td>\r\n        <td *ngIf=\"options.delBtn\"><span class=\"tomato pointer {{!(svc.r.d&&!item.b)&&'disabled'}}\" (click)=\"(svc.r.d&&!item.b)&&del(item);\" title=\"{{'Del'|translate}}\"><fa-icon [icon]=\"faTrashAlt\"></fa-icon></span></td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</div>\r\n<div  *ngIf=\"!svc.r.r\" class=\"alert alert-warning text-center\" role=\"alert\">{{'ITEMS-TABLE.Access_denied' | translate}} {{'types.'+itemType| translate}}</div>\r\n<app-items-paginator [state]=\"app.state.items[itemType]\"     [result]=\"result\"></app-items-paginator>\r\n"
 
 /***/ }),
 
@@ -184,7 +184,7 @@ module.exports = "<h3>\r\n  <span  class=\"text-capitalize\">{{'type.competitor'
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [options]=\"contolsOptions\"></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n"
+module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [options]=\"controlsOptions\"></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n"
 
 /***/ }),
 
@@ -206,7 +206,7 @@ module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" ></a
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"!app.go.race\">\r\n  <h4>Select race:</h4>\r\n    <table  class=\"mt-2 table\" id=\"items-table\">\r\n      <tr *ngFor=\"let item of app.races.items\">\r\n        <td><a class=\"nav-link\" routerLink=\"/go/{{item.id}}\"  href=\"\">{{item.name}}</a></td>\r\n      </tr>\r\n    </table>\r\n</div>\r\n\r\n<div *ngIf=\"app.go.race\">\r\n  <div class=\"row\"  id=\"recontainer\" >\r\n    <div class=\"col-md-7 \">\r\n      <div >\r\n        <form class=\"form-inline mb-2\">\r\n          <div class=\"form-group mr-1\">\r\n            <button type=\"button\" (click)=\"resetEventsFilter()\" class=\"btn btn-light\"><fa-icon  [icon]=\"faBan\" class=\"grey\" title=\"Reset filters\"></fa-icon></button>\r\n          </div>\r\n          <div class=\"form-group mr-1\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.competitorNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\">\r\n          </div>\r\n          <div class=\"form-group mr-1\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.categoryName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Категория\">\r\n          </div>\r\n          <div class=\"form-group mr-1\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter._lap\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Круг\">\r\n          </div>\r\n          <div class=\"form-group mr-1\">\r\n            <select class=\"form-control\" [(ngModel)]=\"s.eventsTimeScale\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n              <option value=\"\">0</option>\r\n              <option value=\"10000\">1/10000</option>\r\n              <option value=\"1000\">1/1000</option>\r\n              <option value=\"100\">1/100</option>\r\n            </select>\r\n          </div>\r\n          <div class=\"form-group mr-1\">\r\n            <select class=\"form-control\" [(ngModel)]=\"s.eventsLimit\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Кол-во\">\r\n              <option value=\"10000\">10000</option>\r\n              <option value=\"1000\">1000</option>\r\n              <option value=\"100\">100</option>\r\n              <option value=\"50\">50</option>\r\n              <option value=\"20\">20</option>\r\n            </select>\r\n          </div>\r\n        </form>\r\n        <div class=\"scrolled\">\r\n          <div \r\n            *ngFor=\"let item of app.go.raceEvents  | myFilter: s.eventsFilter| slice:0:s.eventsLimit; index as i;\" \r\n            class=\"row reg {{item.eventType==2?'start':''}} {{item.eventType==3?'finish':''}}\"\r\n            (dblclick)=\"switchEditEventForm(item)\"\r\n            [ngStyle]=\"s.eventsTimeScale?{'margin-top': delayH(item, app.go.raceEvents, i)}:{}\"\r\n            >\r\n            <div class=\"col-md-1\">\r\n              <h3>{{item.competitorNum}}</h3>\r\n              <button *ngIf=\"editEventId===item.id\" type=\"button\" (click)=\"saveEvent(item)\" class=\"btn btn-primary\"><fa-icon  [icon]=\"faSave\"  title=\"Save\"></fa-icon></button>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              <div *ngIf=\"editEventId!==item.id\">{{item.competitorName}}</div>\r\n              <div *ngIf=\"editEventId===item.id\">\r\n                <input type=\"text\" class=\"form-control\" [(ngModel)]=\"editEventFilter.fullNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\" (keyup)=\"setEditCopetitorId(item)\">\r\n                <select class=\"form-control\"  [(ngModel)]=\"item.competitorId\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                  <option value=\"{{competitor.id}}\" *ngFor=\"let competitor of app.competitors.items | myFilter: editEventFilter | slice:0:10| asResult : editEventFilterresult;\">{{competitor.fullNameNum}}</option>\r\n                </select>\r\n              </div>\r\n              <small>\r\n                {{(item.t-app.go.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n                <span *ngIf=\"item._lapT\">{{(item._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}</span>\r\n              </small>\r\n              <h4 *ngIf=\"item.eventType==2\">Start Race</h4>\r\n              <h4 *ngIf=\"item.eventType==3\">Finish Race</h4>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              {{item.categoryName}}\r\n            </div>\r\n            <div class=\"col-md-1\"><small *ngIf=\"item._lap\">{{item._lap}} круг</small></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"col-md-5\">\r\n      <h5>\r\n        {{app.go.race.name}} \r\n        <span *ngIf=\"app.go.start\"> | {{app.go.start.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.finish\"> | {{app.go.finish.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.start && !app.go.start\"> | {{(app.go.t-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span>\r\n      </h5>\r\n      <form  (submit)=\"app.go.start&&onFormSubmit(1,result.items[0].id)\" >\r\n        <fieldset>\r\n          <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n              <div class=\"form-group\">\r\n                <input type=\"text\" class=\"form-control form-control-lg\" [(ngModel)]=\"s.filter.competitorName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Фильтр\">\r\n              </div>\r\n            </div>\r\n            <div class=\"col-md-6 text-right\">\r\n              <div class=\"form-group\">\r\n                <!-- <button class=\"btn btn-primary btn-lg mr-2\" type=\"submit\">Register lap</button> -->\r\n                <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"!app.go.start\"  type=\"button\" (click)=\"onFormSubmit(1,0);\" >Пустое</button>\r\n                <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.start\" type=\"button\" (click)=\"onFormSubmit(2,0);\" >Start</button>\r\n                <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.finish||!app.go.start\" type=\"button\" (click)=\" onFormSubmit(3,0);\" >Finish</button>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </fieldset>\r\n      </form>\r\n      <table class=\"table\">\r\n        <tr \r\n          *ngFor=\"let item of app.competitors.items | myFilter:{fullNameNum:s.filter.competitorName} | slice:0:10 | asResult : result; index as i;\"  \r\n          (click)=\"app.go.start&&onFormSubmit(1,item.id);\"\r\n          class=\"clickable\" \r\n          >\r\n          <td width=\"40px\">{{item.num}}</td>\r\n          <td>{{item.fullName}}</td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n"
+module.exports = "<div *ngIf=\"!app.go.race\">\r\n  <h4>Select race:</h4>\r\n    <table  class=\"mt-2 table\" id=\"items-table\">\r\n      <tr *ngFor=\"let item of app.races.items\">\r\n        <td><a class=\"nav-link\" routerLink=\"/go/{{item.id}}\"  href=\"\">{{item.name}}</a></td>\r\n      </tr>\r\n    </table>\r\n</div>\r\n\r\n<div *ngIf=\"app.go.race\">\r\n  <div class=\"row\"  id=\"recontainer\" >\r\n    <div class=\"col-xl-7 col-sm-6\">\r\n      <div >\r\n        <form class=\" mb-2\">\r\n          <div class=\"form-row\">\r\n            <div class=\"col-1\">\r\n              <button type=\"button\" (click)=\"resetEventsFilter()\" class=\"btn btn-light\"><fa-icon  [icon]=\"faBan\" class=\"grey\" title=\"Reset filters\"></fa-icon></button>\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.competitorNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.categoryName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Категория\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter._lap\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Круг\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <select class=\"form-control\" [(ngModel)]=\"s.eventsTimeScale\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                <option value=\"\">0</option>\r\n                <option value=\"10000\">1/10000</option>\r\n                <option value=\"1000\">1/1000</option>\r\n                <option value=\"100\">1/100</option>\r\n              </select>\r\n            </div>\r\n            <div class=\"col\">\r\n              <select class=\"form-control\" [(ngModel)]=\"s.eventsLimit\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Кол-во\">\r\n                <option value=\"10000\">10000</option>\r\n                <option value=\"1000\">1000</option>\r\n                <option value=\"100\">100</option>\r\n                <option value=\"50\">50</option>\r\n                <option value=\"20\">20</option>\r\n              </select>\r\n            </div>\r\n          </div>\r\n        </form>        \r\n\r\n        <div class=\"scrolled\">\r\n          <div \r\n            *ngFor=\"let item of app.go.raceEvents  | myFilter: s.eventsFilter| slice:0:s.eventsLimit; index as i;\" \r\n            class=\"row reg {{item.eventType==2?'start':''}} {{item.eventType==3?'finish':''}}\"\r\n            (dblclick)=\"switchEditEventForm(item)\"\r\n            [ngStyle]=\"s.eventsTimeScale?{'margin-top': delayH(item, app.go.raceEvents, i)}:{}\"\r\n            >\r\n            <div class=\"col-md-1\">\r\n              <h3>{{item.competitorNum}}</h3>\r\n              <button *ngIf=\"editEventId===item.id\" type=\"button\" (click)=\"saveEvent(item)\" class=\"btn btn-primary\"><fa-icon  [icon]=\"faSave\"  title=\"Save\"></fa-icon></button>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              <div *ngIf=\"editEventId!==item.id\">{{item.competitorName}}</div>\r\n              <div *ngIf=\"editEventId===item.id\">\r\n                <input type=\"text\" class=\"form-control\" [(ngModel)]=\"editEventFilter.fullNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\" (keyup)=\"setEditCopetitorId(item)\">\r\n                <select class=\"form-control\"  [(ngModel)]=\"item.competitorId\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                  <option value=\"{{competitor.id}}\" *ngFor=\"let competitor of app.competitors.items | myFilter: editEventFilter | slice:0:10| asResult : editEventFilterresult;\">{{competitor.fullNameNum}}</option>\r\n                </select>\r\n              </div>\r\n              <small>\r\n                {{(item.t-app.go.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n                <span *ngIf=\"item._lapT\">{{(item._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}</span>\r\n              </small>\r\n              <h4 *ngIf=\"item.eventType==2\">Start Race</h4>\r\n              <h4 *ngIf=\"item.eventType==3\">Finish Race</h4>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              {{item.categoryName}}\r\n            </div>\r\n            <div class=\"col-md-1\"><small *ngIf=\"item._lap\">{{item._lap}}</small></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"col-xl-5 col-sm-6\">\r\n      <h5>\r\n        {{app.go.race.name}} \r\n        <span *ngIf=\"app.go.start\"> | {{app.go.start.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.finish\"> | {{app.go.finish.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.start && !app.go.start\"> | {{(app.go.t-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span>\r\n      </h5>\r\n\r\n      <form  (submit)=\"app.go.start&&onFormSubmit(1,result.items[0].id)\" class=\" mb-2 \">\r\n        <div class=\"form-row\">\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control form-control-lg   mr-2\" [(ngModel)]=\"s.filter.competitorName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Фильтр\">\r\n          </div>\r\n          <!-- <button class=\"btn btn-primary btn-lg mr-2\" type=\"submit\">Register lap</button> -->\r\n          <div class=\"col\">\r\n            <div style=\"width:285px;\">\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"!app.go.start\"  type=\"button\" (click)=\"onFormSubmit(1,0);\" >Пустое</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.start\" type=\"button\" (click)=\"onFormSubmit(2,0);\" >Start</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.finish||!app.go.start\" type=\"button\" (click)=\" onFormSubmit(3,0);\" >Finish</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </form>\r\n      <table class=\"table\">\r\n        <tr \r\n          *ngFor=\"let item of app.competitors.items | myFilter:{fullNameNum:s.filter.competitorName} | orderBy : ['-_lastT']  | slice:0:10 | asResult : result; index as i;\"  \r\n          (click)=\"app.go.start&&onFormSubmit(1,item.id);\"\r\n          class=\"clickable\" \r\n          >\r\n          <td width=\"40px\">{{item.num}}</td>\r\n          <td>{{item.fullName}}</td>\r\n          <td><span *ngIf=\"item._lastT\" >{{(item._t-app.go.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}</span></td>\r\n          <!-- <td><span *ngIf=\"item._lastT\" >{{(item._lastT-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span></td> -->\r\n          <td><small *ngIf=\"item._lap\">{{item._lap}}</small></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -217,7 +217,7 @@ module.exports = "<div *ngIf=\"!app.go.race\">\r\n  <h4>Select race:</h4>\r\n   
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav *ngIf=\"core.session\" class=\"navbar navbar-expand-lg navbar-light bg-light\">\r\n  <a class=\"navbar-brand logo\" routerLink=\"/\" href=\"\">\r\n    <img src=\"favicon.ico\" alt=\"\" > MF Timing\r\n  </a>\r\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n    <span class=\"navbar-toggler-icon\"></span>\r\n  </button>\r\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\r\n    <ul class=\"navbar-nav mr-auto\">\r\n      <li class=\"nav-item \"  ><a class=\"nav-link\" routerLink=\"/go\" [routerLinkActive]=\"'active'\" href=\"\" translate>Go</a></li>\r\n      <li class=\"nav-item \"  ><a class=\"nav-link\" routerLink=\"/races\" [routerLinkActive]=\"'active'\" href=\"\" translate>Race</a></li>\r\n      <li class=\"nav-item \"  *ngIf=\"r&&r.competitors\"><a class=\"nav-link\" routerLink=\"/competitors\" [routerLinkActive]=\"'active'\" href=\"\" translate>Competitors</a></li>\r\n      <li class=\"nav-item \"  *ngIf=\"r&&r.category\"><a class=\"nav-link\" routerLink=\"/categories\" [routerLinkActive]=\"'active'\" href=\"\" translate>Categories</a></li>\r\n      <app-nav-trash *ngIf=\"r&&r.trash\" [app]=\"app\"></app-nav-trash>\r\n      <app-nav-appevts-log [app]=\"app\"></app-nav-appevts-log>\r\n    </ul>\r\n    <span *ngIf=\"!app.ready\" class=\"navbar-text silver\"><fa-icon [icon]=\"faCog\" [spin]=\"true\"></fa-icon> loading...</span>\r\n    <span class=\"navbar-text\">\r\n      <a href=\"\" routerLink=\"/user/{{core.user.id}}\">{{core.user.name}}</a> | <span title=\"Sign Out\" (click)=\"logOut()\" class=\"pointer\" style=\"vertical-align: -1px;\"><fa-icon [icon]=\"faSignOutAlt\" ></fa-icon></span>\r\n    </span>\r\n  </div>\r\n</nav>\r\n"
+module.exports = "<nav *ngIf=\"core.session\" class=\"navbar navbar-expand-lg navbar-light bg-light\">\r\n  <a class=\"navbar-brand logo\" routerLink=\"/\" href=\"\">\r\n    <img src=\"favicon.ico\" alt=\"\" > MF Timing\r\n  </a>\r\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n    <span class=\"navbar-toggler-icon\"></span>\r\n  </button>\r\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\r\n    <ul class=\"navbar-nav mr-auto\">\r\n      <!-- <li class=\"nav-item \"  ><a class=\"nav-link\" routerLink=\"/go\" [routerLinkActive]=\"'active'\" href=\"\" translate>Go</a></li> -->\r\n      <li class=\"nav-item \"  ><a class=\"nav-link\" routerLink=\"/races\" [routerLinkActive]=\"'active'\" href=\"\" translate>Race</a></li>\r\n      <li class=\"nav-item \"  *ngIf=\"r&&r.competitors\"><a class=\"nav-link\" routerLink=\"/competitors\" [routerLinkActive]=\"'active'\" href=\"\" translate>Competitors</a></li>\r\n      <li class=\"nav-item \"  *ngIf=\"r&&r.category\"><a class=\"nav-link\" routerLink=\"/categories\" [routerLinkActive]=\"'active'\" href=\"\" translate>Categories</a></li>\r\n      <app-nav-trash *ngIf=\"r&&r.trash\" [app]=\"app\"></app-nav-trash>\r\n      <app-nav-appevts-log [app]=\"app\"></app-nav-appevts-log>\r\n    </ul>\r\n    <span *ngIf=\"!app.ready\" class=\"navbar-text silver\"><fa-icon [icon]=\"faCog\" [spin]=\"true\"></fa-icon> loading...</span>\r\n    <span class=\"navbar-text\">\r\n      <a href=\"\" routerLink=\"/user/{{core.user.id}}\">{{core.user.name}}</a> | <span title=\"Sign Out\" (click)=\"logOut()\" class=\"pointer\" style=\"vertical-align: -1px;\"><fa-icon [icon]=\"faSignOutAlt\" ></fa-icon></span>\r\n    </span>\r\n  </div>\r\n</nav>\r\n"
 
 /***/ }),
 
@@ -228,7 +228,7 @@ module.exports = "<nav *ngIf=\"core.session\" class=\"navbar navbar-expand-lg na
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center\">\r\n  <br>\r\n  <br>\r\n      <img src=\"favicon.ico\" alt=\"\" id=\"logo\"><br><br>\r\n      <div id=\"h\">\r\n        <h1 class=\"display-4\">MF Timing</h1>\r\n        <p class=\"lead\" translate>Na nah epta...</p>\r\n      </div>\r\n    </div>\r\n"
+module.exports = "<div class=\"pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center\">\r\n  <br>\r\n  <br>\r\n  <img src=\"favicon.ico\" alt=\"\" id=\"logo\"><br><br>\r\n  <div id=\"h\">\r\n    <h1 class=\"display-4\">MF Timing</h1>\r\n    <p class=\"lead\" translate>Na nah epta...</p>\r\n  </div>\r\n</div>\r\n<br>\r\n<br>\r\n<br>\r\n<br>\r\n<br>\r\n\r\n<br>\r\n<br>\r\n<br><br>\r\n<br>\r\n<br><br>\r\n<br>\r\n<br>\r\n<br>\r\n<hr>\r\n<div class=\"text-center\">\r\n<h2>Тестовые данные</h2><br>\r\n<br>\r\n<h5>Категории</h5>\r\n<textarea class=\"form-control\" rows=\"10\">\"Мужчины\" 23-39 лет;\r\n\"Женщины” от 17 лет и старше;\r\n“Новички мужчины”;\r\n“Юноши 13-14 лет”;\r\n“Юноши 11-12 лет”;\r\n“Ветераны” от 40 лет и старше;\r\n“Андеры 17-22 года”;\r\n“Новички женщины”;\r\n“Юноши 15-16 лет”;\r\n“Девушки 15-16 лет”;\r\n“Девушки 11-12 лет”;\r\n“Девушки 13-14 лет”;</textarea><br>\r\n<br>\r\n<h5>Участиники</h5>\r\n<textarea class=\"form-control\" rows=\"10\">27.05.2022 21:44:47\tСухоловская\tУльяна\tИгоревна\t1998\t\"Женщины” от 17 лет и старше;\t#матрацфорева\t24\t51\t51\r\n17.05.2022 14:08:45\tШиманова\tЯрослава \tСергеевна\t2004\t\"Женщины” от 17 лет и старше;\tProCaT\t18\t-\t56\r\n24.05.2022 13:34:42\tДобдина\tАнастасия\tСергеевна\t1999\t\"Женщины” от 17 лет и старше;\tProCaT\t23\t52\t52\r\n27.05.2022 19:33:14\tКопчекчи \tКсения\tАлександровна\t2002\t\"Женщины” от 17 лет и старше;\tДЮСК \"Символ\"\t20\t-\t55\r\n30.05.2022 10:37:40\tТрушина\tЮлия\t \t1970\t\"Женщины” от 17 лет и старше;\t\t\t\t54\r\n17.05.2022 14:07:36\tБатракова \tМария\tСергеевна \t1993\t\"Женщины” от 17 лет и старше;\t\t29\t54\t54\r\n17.05.2022 10:27:15\tКумаков\tДмитрий\tАлександрович\t1990\t\"Мужчины\" 23-39 лет;\t#матрацфорева\t32\t3\t2\r\n24.05.2022 13:34:02\tДобдин\tАндрей\tСергеевич\t1985\t\"Мужчины\" 23-39 лет;\tProCaT\t37\t4\t3\r\n17.05.2022 14:04:21\tШатурный\tДмитрий\tАлексеевич\t1994\t\"Мужчины\" 23-39 лет;\t#матрацфорева\t28\t6\t4\r\n23.05.2022 13:53:02\tПуд\tМихаил\tГерасимович\t1995\t\"Мужчины\" 23-39 лет;\tProCaT\t27\t-\t18\r\n30.05.2022 9:33:58\tИванов\tВячеслав\t \t1988\t\"Мужчины\" 23-39 лет;\t\t\t\t16\r\n17.05.2022 14:22:26\tКосенков\tДаниил\tАртурович\t1995\t\"Мужчины\" 23-39 лет;\tProsport.pro\t27\t11\t7\r\n17.05.2022 14:18:42\tСмирнов\tЕвгений\tВладимирович\t1984\t\"Мужчины\" 23-39 лет;\t\t38\t10\t6\r\n17.05.2022 14:35:54\tТрейаль\tВсеволод\tАндреевич\t1992\t\"Мужчины\" 23-39 лет;\t\t30\t15\t10\r\n24.05.2022 12:49:02\tЧепурной\tНикита\tСергеевич\t1985\t\"Мужчины\" 23-39 лет;\t#матрацфорева\t37\t9\t5\r\n17.05.2022 15:08:01\tКувшинов\tИван\tКонстантинович\t1991\t\"Мужчины\" 23-39 лет;\t\t31\t12\t8\r\n25.05.2022 1:02:44\tКозлов\tВладимир\tАлександрович\t1995\t\"Мужчины\" 23-39 лет;\tГоКатать\t27\t-\t23\r\n30.05.2022 9:38:42\tЩелкунов\tОлег\tСергеевич\t1989\t\"Мужчины\" 23-39 лет;\t#матрацфорева\t\t\t15\r\n17.05.2022 23:32:35\tПодгорнов\tАлексей\tВитальевич\t1989\t\"Мужчины\" 23-39 лет;\tTRIASSA\t33\t-\t19\r\n25.05.2022 0:00:08\tГаврюшин\tВладислав\tАндреевич\t1996\t\"Мужчины\" 23-39 лет;\t\t26\t13\t9\r\n17.05.2022 21:18:24\tОвсянников\tАлександр\tВикторович\t1985\t\"Мужчины\" 23-39 лет;\t\t37\t-\t17\r\n17.05.2022 14:11:43\tКоролевский\tАлександр\tСергеевич\t1994\t\"Мужчины\" 23-39 лет;\t#матрацфорева\t28\t17\t12\r\n26.05.2022 7:40:10\tЛюппа\tАлексей\tЮрьевич\t1989\t\"Мужчины\" 23-39 лет;\tProCaT\t33\t16\t11\r\n23.05.2022 17:14:42\tБузинов\tАндрей\tМихайлович\t1989\t\"Мужчины\" 23-39 лет;\t\t33\t-\t21\r\n23.05.2022 13:01:09\tМатвеев\tАлександр\tМихайлович\t1988\t\"Мужчины\" 23-39 лет;\t\t34\t18\t13\r\n23.05.2022 17:51:58\tМаламанов\tАлександр \tСергеевич \t1986\t\"Мужчины\" 23-39 лет;\t\t36\t-\t22\r\n17.05.2022 17:13:09\tОхонько\tМихаил\tАнатольевич\t1989\t\"Мужчины\" 23-39 лет;\t\t33\t2\t1\r\n30.05.2022 9:45:00\tНечаев\tВиктор\t \t1987\t\"Мужчины\" 23-39 лет;\t\t\t\t20\r\n17.05.2022 14:42:22\tХорошевский\tБорис\tКонстантинович \t1999\t\"Мужчины\" 23-39 лет;\t\t23\t-\t\r\n22.05.2022 14:32:21\tЧумаков \tДмитрий \tАлександрович \t1983\t\"Мужчины\" 23-39 лет;\t\t39\t19\t\r\n24.05.2022 15:57:55\tСедов\tАлександр\tГеннадиевич\t1983\t\"Мужчины\" 23-39 лет;\t\t39\t-\t\r\n24.05.2022 19:38:44\tДемин\tСергей\tФедорович\t1985\t\"Мужчины\" 23-39 лет;\t\t37\t-\t\r\n25.05.2022 22:34:22\tСилин \tМаксим \tЕвгеньевич \t1986\t\"Мужчины\" 23-39 лет;\t\t36\t-\t\r\n18.05.2022 16:29:05\tМосалыгин\tГригорий \tДмитриевич\t2004\t“Андеры 17-22 года”;\tProsport.pro\t18\t201\t201\r\n24.05.2022 8:23:49\tТолстов\tДанила\tЛеонидович\t2004\t“Андеры 17-22 года”;\tГБУСО СШОР НГ\t18\t202\t202\r\n17.05.2022 15:51:45\tГолубев\tАрсений\tСергеевич\t2002\t“Андеры 17-22 года”;\tProCaT\t20\t204\t204\r\n28.05.2022 13:13:41\tАксенов \tКонстантин \tМихайлович \t2005\t“Андеры 17-22 года”;\tTRIASSA\t17\t-\t210\r\n27.05.2022 19:28:35\tДавыдов\tДаниил\tДмитриевич\t2004\t“Андеры 17-22 года”;\tДЮСК \"Символ\"\t18\t-\t211\r\n28.05.2022 22:21:56\tНарышев \tНикита \tАлексеевич \t2004\t“Андеры 17-22 года”;\t\t18\t-\t209\r\n24.05.2022 21:16:22\tМолоканов\tКирилл\tВитальевич\t2001\t“Андеры 17-22 года”;\t\t21\t-\t208\r\n26.05.2022 9:23:35\tФедоров\tЕфим\tВладимирович\t2000\t“Андеры 17-22 года”;\tКудрявая молния (шучу, нет команды)\t22\t-\t212\r\n20.05.2022 18:02:36\tЕрмилов \tАндрей \tАндреевич \t2001\t“Андеры 17-22 года”;\tГоКатать \t21\t-\t\r\n25.05.2022 12:31:09\tНикитенко\tЗахар\tЮрьевич\t2004\t“Андеры 17-22 года”;\tTRIASSA\t18\t205\t\r\n25.05.2022 12:32:26\tЗакутин\tСемён\tМихайлович\t2003\t“Андеры 17-22 года”;\tTRIASSA\t19\t203\t\r\n25.05.2022 23:33:19\tКаменев\tГлеб\tАлександрович\t2005\t“Андеры 17-22 года”;\t\t17\t206\t\r\n20.05.2022 18:17:45\tГранат\tМаксим\tАндреевич\t1981\t“Ветераны” от 40 лет и старше;\t\t41\t-\t108\r\n17.05.2022 19:24:26\tСороколадов\tАлексей\tВикторовия\t1977\t“Ветераны” от 40 лет и старше;\tСпортМир\t45\t101\t101\r\n24.05.2022 16:57:25\tСафронов\tБорис\tАлексеевич\t1982\t“Ветераны” от 40 лет и старше;\tProsport.pro\t40\t102\t102\r\n17.05.2022 19:24:59\tФедукин\tАндрей\tАнатольевич\t1981\t“Ветераны” от 40 лет и старше;\tСпортМир\t41\t103\t103\r\n20.05.2022 20:55:49\tЛотко\tАлександр\tЮрьевич\t1975\t“Ветераны” от 40 лет и старше;\t#матрацфорева\t47\t104\t104\r\n21.05.2022 10:08:59\tФедоров\tВасилий\tВладимирович\t1971\t“Ветераны” от 40 лет и старше;\tXCVLG\t51\t-\t109\r\n17.05.2022 15:05:02\tХрунов\tРоман\tИгоревич\t1981\t“Ветераны” от 40 лет и старше;\tVelosaratov.ru\t41\t-\t106\r\n23.05.2022 17:21:13\tСтепанов \tОлег\tИгоревич\t1981\t“Ветераны” от 40 лет и старше;\t\t41\t-\t107\r\n24.05.2022 13:52:54\tЧерношей\tЮрий\tАлександрович\t1982\t“Ветераны” от 40 лет и старше;\tABST\t40\t-\t110\r\n20.05.2022 22:12:09\tЕлхимов\tАндрей\tВладимирович\t1974\t“Ветераны” от 40 лет и старше;\t\t48\t-\t\r\n24.05.2022 15:30:03\tШироков \tАлександр \tАлександрович \t1982\t“Ветераны” от 40 лет и старше;\tProCaT \t40\t105\t\r\n30.05.2022 10:29:27\tФирсова\tУльяна\t \t2010\t“Девушки 11-12 лет”;\t\t\t\t803\r\n24.05.2022 18:16:11\tСоломина\tСофья\tСергеевна \t2011\t“Девушки 11-12 лет”;\tГБУСО СШОР НГ\t11\t802\t801\r\n24.05.2022 17:51:20\tБерезуцкая \tМария\tАлексеевна\t2015\t“Девушки 11-12 лет”;\tГБУСО СШОР НГ\t7\t803\t802\r\n30.05.2022 10:30:57\tАндреева\tАрина\t \t2008\t“Девушки 13-14 лет”;\t\t\t\t602\r\n27.05.2022 21:14:03\tМухина\tАнна\tДмитриевна\t2008\t“Девушки 13-14 лет”;\tДЮСК \"Символ\"\t14\t-\t603\r\n25.05.2022 8:57:58\tЕськина\tДарья\tСергеевна\t2009\t“Девушки 13-14 лет”;\tГБУСО СШОР НГ\t13\t-\t601\r\n27.05.2022 21:02:09\tЛаврова\tАнастасия\tДмитриевна\t2008\t“Девушки 13-14 лет”;\t\t14\t-\t\r\n27.05.2022 19:59:07\tРумянцева\tМария\tИгоревна\t2006\t“Девушки 15-16 лет”;\tДЮСК \"Символ\"\t16\t401\t401\r\n30.05.2022 10:32:33\tРешникова\tОльга\t \t2007\t“Девушки 15-16 лет”;\tСДЮСШ №3\t\t\t409\r\n24.05.2022 21:03:16\tКухаренко \tКира\tВладимировна \t2007\t“Девушки 15-16 лет”;\tГБУСО СШОР НГ\t15\t-\t403\r\n27.05.2022 19:29:34\tТяпкина\tПолина\tАндреевна\t2006\t“Девушки 15-16 лет”;\tДЮСК \"Символ\"\t16\t-\t407\r\n27.05.2022 19:32:58\tНаумова \tЕлизавета \tСергеевна \t2007\t“Девушки 15-16 лет”;\tДЮСК \"Символ\"\t15\t-\t406\r\n25.05.2022 21:45:55\tШеина \tАлександра \tИвановна\t2007\t“Девушки 15-16 лет”;\tСпартак\t15\t-\t405\r\n25.05.2022 21:45:05\tБузова\tЕлена\tИвановна\t2007\t“Девушки 15-16 лет”;\tСпартак\t15\t-\t404\r\n23.05.2022 17:52:05\tБойцова\tВероника\tАндреевна\t2006\t“Девушки 15-16 лет”;\tГБУСО СШОР НГ\t16\t-\t402\r\n30.05.2022 10:35:30\tЕлхина\tАнастасия\t \t2006\t“Девушки 15-16 лет”;\tГБУСО СШОР НГ\t\t\t408\r\n17.05.2022 16:00:57\tКоршунова \tЕкатерина \tОлеговна\t1991\t“Новички женщины”;\t\t31\t951\t\r\n24.05.2022 18:01:09\tБаринов\tМаксим\tВалерьевич\t2000\t“Новички мужчины”;\t\t22\t907\t903\r\n30.05.2022 10:39:01\tЛарин\tЮрий\t \t1987\t“Новички мужчины”;\t\t\t\t909\r\n30.05.2022 10:39:44\tХорошевский\tБорис\t \t\t“Новички мужчины”;\t\t\t\t913\r\n24.05.2022 22:38:08\tЕмельянов\tАндрей\tСергеевич\t1995\t“Новички мужчины”;\t\t27\t-\t907\r\n17.05.2022 14:08:13\tПоловинкин\tДаниил\tВитальевич\t1996\t“Новички мужчины”;\tSaratov_cycling\t26\t903\t901\r\n24.05.2022 15:52:19\tТерентьев\tКонстантин\tСергеевич\t1988\t“Новички мужчины”;\t\t34\t910\t905\r\n17.05.2022 20:29:02\tБабурин\tДмитрий\tАлексеевич\t1976\t“Новички мужчины”;\t\t46\t-\t908\r\n24.05.2022 13:57:33\tСанин\tМатвей\tАнтонович\t2004\t“Новички мужчины”;\tГоКатать \t18\t-\t910\r\n18.05.2022 0:44:25\tНестеренок\tДмитрий\tАлександрович\t1985\t“Новички мужчины”;\t\t37\t911\t906\r\n30.05.2022 10:41:59\tСедов\tАлександр\t \t1983\t“Новички мужчины”;\t\t\t\t911\r\n24.05.2022 22:53:45\tСкрекотин\tАлександр\tНиколаевич\t1984\t“Новички мужчины”;\t\t38\t905\t902\r\n25.05.2022 11:54:46\tГорлов\tДмитрий\tВладимирович\t1990\t“Новички мужчины”;\t\t32\t909\t904\r\n25.05.2022 0:06:57\tГурин\tВладимир\tЕвгеньевич\t1985\t“Новички мужчины”;\t\t37\t-\t912\r\n17.05.2022 14:31:02\tМасеев\tРинат\tШамильевич\t1991\t“Новички мужчины”;\t\t31\t-\t\r\n17.05.2022 18:52:37\tКурдюков\tМаксим\tАлексеевич\t1997\t“Новички мужчины”;\tLMCR\t25\t-\t\r\n21.05.2022 9:53:01\tБессонов\tАндрей \tСергеевич \t1982\t“Новички мужчины”;\tБыстрее выше сильнее \t40\t-\t\r\n21.05.2022 23:47:06\tКаргин\tАлексей\tИванович\t2004\t“Новички мужчины”;\t\t18\t-\t\r\n17.05.2022 14:50:45\tХрипунов \tПавел\tИльич\t2011\t“Юноши 11-12 лет”;\tСпартак\t11\t701\t701\r\n24.05.2022 21:14:25\tМалютин\tАртём\tСергеевич\t2010\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t12\t706\t706\r\n24.05.2022 17:08:22\tКильдишов \tИван\tАлександрович\t2011\t“Юноши 11-12 лет”;\t\t11\t-\t713\r\n24.05.2022 17:34:06\tСтрелков\tЕгор\tАлексеевич\t2010\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t12\t705\t705\r\n24.05.2022 17:33:22\tКозичев\tВладислав\tАлексеевич\t2011\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t11\t703\t703\r\n24.05.2022 15:28:40\tШироков \tАлександр \tАлександрович \t2010\t“Юноши 11-12 лет”;\tProCaT \t12\t702\t702\r\n23.05.2022 12:45:48\tГурин\tИван\tЕвгеньевич\t2012\t“Юноши 11-12 лет”;\t\t10\t-\t711\r\n24.05.2022 17:37:23\tАжигалиев\tМатвей\tДмитриевич\t2010\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t12\t-\t715\r\n30.05.2022 10:26:41\tТруевский\tВячеслав\t \t2010\t“Юноши 11-12 лет”;\t\t\t\t712\r\n30.05.2022 10:27:20\tКосырев\tКирилл\t \t2013\t“Юноши 11-12 лет”;\t\t\t\t716\r\n24.05.2022 21:04:18\tКухаренко \tДмитрий \tВладимирович \t2011\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t11\t704\t704\r\n24.05.2022 18:35:43\tШлеин \tАлександр \tНиколаевич \t2012\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t10\t708\t708\r\n24.05.2022 15:29:13\tШироков\tРуслан \tАлександрович \t2010\t“Юноши 11-12 лет”;\tProCaT \t12\t707\t707\r\n25.05.2022 8:46:48\tДавыдов\tЛев\tДмитриевич\t2011\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t11\t713\t710\r\n24.05.2022 17:31:30\tЕремин \tВиктор \tСергеевич\t2010\t“Юноши 11-12 лет”;\tГБУСО СШОР НГ\t12\t-\t714\r\n24.05.2022 17:22:45\tГригорян\tЭрик\tСергеевич\t2011\t“Юноши 11-12 лет”;\t\t11\t710\t\r\n25.05.2022 21:43:12\tСтрагин\tДмитрий\tИванович\t2010\t“Юноши 11-12 лет”;\tСпартак\t12\t-\t\r\n17.05.2022 14:18:21\tЛазарев\tГлеб\tНиколаевич \t2008\t“Юноши 13-14 лет”;\t\t14\t501\t501\r\n25.05.2022 22:45:07\tПрокофьев \tДаниэль \tАртемович \t2009\t“Юноши 13-14 лет”;\tГБУСО СШОР НГ\t13\t-\t511\r\n30.05.2022 10:17:50\tСаяпин\tИван\t \t2009\t“Юноши 13-14 лет”;\t\t\t\t506\r\n30.05.2022 10:18:24\tСаяпин\tВсеволод\t \t2009\t“Юноши 13-14 лет”;\t\t\t\t507\r\n30.05.2022 10:19:11\tСидельников\tАндрей\t \t2008\t“Юноши 13-14 лет”;\tГБУСО СШОР НГ\t\t\t514\r\n24.05.2022 21:43:12\tЗолотенко \tЯрослав \tАлексеевич \t2009\t“Юноши 13-14 лет”;\tГБУСО СШОР НГ\t13\t507\t504\r\n24.05.2022 20:45:12\tТимошенко \tИгорь \tДмитриевич \t2008\t“Юноши 13-14 лет”;\tГБУСО СШОР НГ\t14\t503\t502\r\n24.05.2022 17:01:56\tКиржанов\tМаксим\tАнатольевич\t2009\t“Юноши 13-14 лет”;\t\t13\t505\t503\r\n19.05.2022 10:19:25\tГвоздев\tАртемий\tАндреевич\t2009\t“Юноши 13-14 лет”;\tСпартак\t13\t-\t509\r\n30.05.2022 10:21:03\tИвченко\tАлександр\t \t2008\t“Юноши 13-14 лет”;\tГБУСО СШОР НГ\t\t\t505\r\n30.05.2022 10:21:41\tГромов\tСтепан\t \t2008\t“Юноши 13-14 лет”;\t\t\t\t512\r\n25.05.2022 21:46:49\tЯнюшкин\tАртем \tИванович \t2008\t“Юноши 13-14 лет”;\tСпартак\t14\t-\t510\r\n30.05.2022 10:22:37\tОстапчук\tАлександр\t \t2008\t“Юноши 13-14 лет”;\t\t\t\t515\r\n30.05.2022 10:23:17\tИсаев\tМаксим\t \t2008\t“Юноши 13-14 лет”;\t\t\t\t513\r\n25.05.2022 21:42:07\tГвоздев \tАртем\tИванович\t2009\t“Юноши 13-14 лет”;\tСпартак\t13\t-\t\r\n25.05.2022 21:44:10\tБузов\tЮрий\tИванович \t2008\t“Юноши 13-14 лет”;\tСпартак\t14\t-\t\r\n28.05.2022 21:17:26\tОвчинников \tНикита \tМихайлович \t2008\t“Юноши 13-14 лет”;\t\t14\t-\t\r\n30.05.2022 10:12:09\tМалянов\tСемён\t \t2006\t“Юноши 15-16 лет”;\tГБУСО СШОР НГ\t\t\t310\r\n25.05.2022 22:44:35\tЛобчук\tДмитрий\tМихайлович\t2006\t“Юноши 15-16 лет”;\tГБУСО СШОР НГ\t16\t301\t301\r\n30.05.2022 10:13:03\tАбрамов\tМатвей\t \t2007\t“Юноши 15-16 лет”;\tГБУСО СШОР НГ\t\t\t305\r\n27.05.2022 19:45:08\tДоронин\tАндрей\tАлександрович\t2007\t“Юноши 15-16 лет”;\tДЮСК \"Символ\"\t15\t303\t302\r\n30.05.2022 10:13:54\tНазаров\tМаксим\t \t2007\t“Юноши 15-16 лет”;\tГБУСО СШОР НГ\t\t\t312\r\n27.05.2022 19:56:28\tТовстоган\tМаксим\tАлексеевич\t2006\t“Юноши 15-16 лет”;\tДЮСК \"Символ\" \t16\t-\t311\r\n17.05.2022 21:16:05\tАмелин \tСерафим\tАлексеевич\t2006\t“Юноши 15-16 лет”;\tTRIASSA\t16\t304\t303\r\n30.05.2022 10:15:11\tИльин\tАлексей\t \t2007\t“Юноши 15-16 лет”;\t\t\t\t307\r\n24.05.2022 17:36:37\tБородихин\tДанила\tАлексеевич\t2007\t“Юноши 15-16 лет”;\t\t15\t-\t308\r\n21.05.2022 9:54:46\tБессонов\tАртем \tАндреевич\t2007\t“Юноши 15-16 лет”;\tБыстрее выше сильнее \t15\t-\t309\r\n30.05.2022 10:16:08\tПрохоров\tНикита\t \t2007\t“Юноши 15-16 лет”;\t\t\t\t313\r\n24.05.2022 12:44:11\tМоисеенко\tМаксим\tАлександрович\t2007\t“Юноши 15-16 лет”;\tСШОР 3\t15\t-\t306\r\n26.05.2022 7:48:11\tКабулов\tАндрей\tАлексеевич\t2007\t“Юноши 15-16 лет”;\t\t15\t305\t</textarea>\r\n</div>"
 
 /***/ }),
 
@@ -272,7 +272,7 @@ module.exports = "      <li class=\"nav-item dropdown\">\r\n        <a class=\"n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h3>\n  <span  class=\"text-capitalize\">{{'type.race'|translate}}</span> : {{(race?'Edit':'Create')|translate|lowercase }}\n</h3>\n\n<form  [formGroup]=\"itemForm\"  *ngIf=\"!importMode\" (submit)=\"onItemFormSubmit()\">\n  <fieldset  [disabled]=\"(race&&!app.races.r.m)||(!race&&!app.races.r.a)\" >\n    <div class=\"row\">\n      <div class=\"col-md-4\">\n        <div class=\"form-group\">\n          <label for=\"seasonId\" translate>races.seasonId</label>\n          <input type=\"text\" class=\"form-control\" id=\"seasonId\" formControlName=\"seasonId\">\n        </div>\n      </div>\n    </div>\n    <div class=\"row\">\n      <div class=\"col-md-4\">\n        <div class=\"form-group\">\n          <label for=\"name\" translate>races.name</label>\n          <input type=\"text\" class=\"form-control\" id=\"name\" formControlName=\"name\">\n        </div>\n      </div>\n    </div>\n    <div class=\"row\">\n      <div class=\"col-md-4\">\n        <div class=\"form-group\">\n          <label for=\"from\" translate>races.from</label>\n          <input type=\"text\" class=\"form-control\" id=\"from\" formControlName=\"from\">\n        </div>\n      </div>\n    </div>\n    <div class=\"row\">\n      <div class=\"col-md-4\">\n        <div class=\"form-group\">\n          <label for=\"to\" translate>races.to</label>\n          <input type=\"text\" class=\"form-control\" id=\"to\" formControlName=\"to\">\n        </div>\n      </div>\n    </div>\n    <button type=\"submit\" class=\"btn btn-primary\">{{(race?'Save_changes':'Add_new')|translate}}</button>\n  </fieldset>\n</form>\n"
+module.exports = "<h3>\r\n  <span  class=\"text-capitalize\">{{'type.race'|translate}}</span> : {{(race?'Edit':'Create')|translate|lowercase }}\r\n</h3>\r\n\r\n<form  [formGroup]=\"itemForm\"  *ngIf=\"!importMode\" (submit)=\"onItemFormSubmit()\">\r\n  <fieldset  [disabled]=\"(race&&!app.races.r.m)||(!race&&!app.races.r.a)\" >\r\n    <div class=\"row\">\r\n      <div class=\"col-md-4\">\r\n        <div class=\"form-group\">\r\n          <label for=\"seasonId\" translate>races.seasonId</label>\r\n          <input type=\"text\" class=\"form-control\" id=\"seasonId\" formControlName=\"seasonId\">\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"row\">\r\n      <div class=\"col-md-4\">\r\n        <div class=\"form-group\">\r\n          <label for=\"name\" translate>races.name</label>\r\n          <input type=\"text\" class=\"form-control\" id=\"name\" formControlName=\"name\">\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"row\">\r\n      <div class=\"col-md-4\">\r\n        <div class=\"form-group\">\r\n          <label for=\"from\" translate>races.from</label>\r\n          <input type=\"text\" class=\"form-control\" id=\"from\" formControlName=\"from\">\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"row\">\r\n      <div class=\"col-md-4\">\r\n        <div class=\"form-group\">\r\n          <label for=\"to\" translate>races.to</label>\r\n          <input type=\"text\" class=\"form-control\" id=\"to\" formControlName=\"to\">\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <button type=\"submit\" class=\"btn btn-primary\">{{(race?'Save_changes':'Add_new')|translate}}</button>\r\n  </fieldset>\r\n</form>\r\n"
 
 /***/ }),
 
@@ -283,7 +283,7 @@ module.exports = "<h3>\n  <span  class=\"text-capitalize\">{{'type.race'|transla
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [options]=\"contolsOptions\"></app-items-controls>\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\n"
+module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [options]=\"contolsOptions\"></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n"
 
 /***/ }),
 
@@ -306,6 +306,17 @@ module.exports = "<h3><span  class=\"text-capitalize\">{{'type.reciever'|transla
 /***/ (function(module, exports) {
 
 module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" ></app-items-controls>\r\n<app-items-table [app]=\"app\" [itemType]=\"itemType\" [options]=\"tableOptions\"></app-items-table>\r\n\r\n<!-- <div *ngIf=\"app.recievers.r.r\">\r\n<table class=\"mt-2 table {{!app.recievers.ready?'not-ready':'ready'}}\">\r\n  <thead>\r\n    <tr>\r\n      <th scope=\"col\" width=\"30px\">#</th>\r\n      <th scope=\"col\" width=\"30px\"></th>\r\n      <th scope=\"col\">Name</th>\r\n      <th scope=\"col\">unitHw</th>\r\n      <th scope=\"col\">units_id</th>\r\n      <th scope=\"col\">Tags</th>\r\n      <th scope=\"col\" width=\"30px\"></th>\r\n    </tr>\r\n  </thead>\r\n  <tbody>\r\n    <tr *ngFor=\"let item of app.recievers.items | myFilter: app.state.items.recievers.filter | slice:0:25 ; async as itemsResult ; index as i;\">\r\n      <th scope=\"row\">{{i+1}}</th>\r\n      <td><a  class=\"{{!app.log.r.d&&'disabled'}}\" href=\"\" [routerLink]=\"'/log/10/'+item.id\" title=\"Show log by this item\"><fa-icon [icon]=\"faListAlt\"></fa-icon></a></td>\r\n      <td><a  href=\"\" [routerLink]=\"'/reciever/'+item.id\" (click)=\"filter=''\">{{item.name}}</a></td>\r\n      <td>{{item.unitHwName}}</td>\r\n      <td>{{item.unitUid}}</td>\r\n      <td>\r\n        <span *ngIf=\"item.tags&&app.tags.ready&&app.tags.items.length\">\r\n          <a  href=\"\" [routerLink]=\"'/tag/'+tagId\"  *ngFor=\"let tagId of item.tags\">{{app.tags._index.id[tagId].num}}; </a>\r\n        </span>\r\n      </td>\r\n      <td><span class=\"tomato pointer {{!app.recievers.r.d&&'disabled'}}\" (click)=\"app.recievers.r.d&&delItem(item);\"><fa-icon [icon]=\"faTrashAlt\"></fa-icon></span></td>\r\n    </tr>\r\n  </tbody>\r\n</table>\r\n</div>\r\n<div  *ngIf=\"!app.recievers.r.r\" class=\"alert alert-warning text-center\" role=\"alert\">Access denied. You have no read access to this items</div> -->"
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/components/results/results.component.html":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/components/results/results.component.html ***!
+  \*************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<table  class=\" table \" >\r\n  <ng-container *ngFor=\"let item of app.results.items2 ; index as i; \">\r\n    <tr *ngIf=\"!app.results.items2[i-1]||item.competitor.categoryId!==app.results.items2[i-1].competitor.categoryId\">\r\n      <th colspan=\"99\">{{item.competitor.categoryName}}</th>\r\n    </tr>\r\n    <tr>\r\n      <td width=\"40px\">{{i+1}}</td>\r\n      <td width=\"400px\">{{item.competitor.fullName}} <br><small>{{item.competitor.categoryName}}</small></td>\r\n      <td width=\"80px\">{{item.competitor.num}}</td>\r\n      <td width=\"100px\">{{(item.events[item.events.length-1].t-app.results.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}</td>\r\n      <td *ngFor=\"let event of item.events\" width=\"100px\">\r\n        {{(event.t-app.results.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}<br>\r\n        {{(event._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n      </td>\r\n      <!-- <td>{{(item.t-app.results.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}</td> -->\r\n      <td></td>\r\n    </tr>\r\n  </ng-container>\r\n</table>\r\n"
 
 /***/ }),
 
@@ -457,6 +468,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_account_account_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/account/account.component */ "./src/app/components/account/account.component.ts");
 /* harmony import */ var _components_accounts_accounts_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./components/accounts/accounts.component */ "./src/app/components/accounts/accounts.component.ts");
 /* harmony import */ var _components_rtqueue_rtqueue_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./components/rtqueue/rtqueue.component */ "./src/app/components/rtqueue/rtqueue.component.ts");
+/* harmony import */ var _components_results_results_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./components/results/results.component */ "./src/app/components/results/results.component.ts");
+
 
 
 
@@ -498,6 +511,7 @@ var routes = [
     { path: 'race', component: _components_race_race_component__WEBPACK_IMPORTED_MODULE_9__["RaceComponent"] },
     { path: 'go/:raceId', component: _components_go_go_component__WEBPACK_IMPORTED_MODULE_10__["GoComponent"] },
     { path: 'go', component: _components_go_go_component__WEBPACK_IMPORTED_MODULE_10__["GoComponent"] },
+    { path: 'results/:raceId', component: _components_results_results_component__WEBPACK_IMPORTED_MODULE_28__["ResultsComponent"] },
     { path: 'login', component: _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_11__["SignInComponent"] },
     { path: 'users', component: _components_users_users_component__WEBPACK_IMPORTED_MODULE_12__["UsersComponent"] },
     { path: 'user', component: _components_user_user_component__WEBPACK_IMPORTED_MODULE_13__["UserComponent"] },
@@ -587,67 +601,71 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_race_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./services/race.service */ "./src/app/services/race.service.ts");
 /* harmony import */ var _services_events_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./services/events.service */ "./src/app/services/events.service.ts");
 /* harmony import */ var _services_event_service__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./services/event.service */ "./src/app/services/event.service.ts");
-/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./services/user-groups.service */ "./src/app/services/user-groups.service.ts");
-/* harmony import */ var _services_user_group_service__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./services/user-group.service */ "./src/app/services/user-group.service.ts");
-/* harmony import */ var _services_tags_service__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./services/tags.service */ "./src/app/services/tags.service.ts");
-/* harmony import */ var _services_tag_service__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./services/tag.service */ "./src/app/services/tag.service.ts");
-/* harmony import */ var _services_units_service__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./services/units.service */ "./src/app/services/units.service.ts");
-/* harmony import */ var _services_unit_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./services/unit.service */ "./src/app/services/unit.service.ts");
-/* harmony import */ var _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./services/hwtypes.service */ "./src/app/services/hwtypes.service.ts");
-/* harmony import */ var _services_hwtype_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./services/hwtype.service */ "./src/app/services/hwtype.service.ts");
-/* harmony import */ var _services_recievers_service__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./services/recievers.service */ "./src/app/services/recievers.service.ts");
-/* harmony import */ var _services_reciever_service__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./services/reciever.service */ "./src/app/services/reciever.service.ts");
-/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./services/log.service */ "./src/app/services/log.service.ts");
-/* harmony import */ var _services_log_item_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./services/log-item.service */ "./src/app/services/log-item.service.ts");
-/* harmony import */ var _services_commands_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./services/commands.service */ "./src/app/services/commands.service.ts");
-/* harmony import */ var _services_messages_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./services/messages.service */ "./src/app/services/messages.service.ts");
-/* harmony import */ var _services_distribution_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./services/distribution.service */ "./src/app/services/distribution.service.ts");
-/* harmony import */ var _services_distributions_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./services/distributions.service */ "./src/app/services/distributions.service.ts");
-/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./services/trash.service */ "./src/app/services/trash.service.ts");
-/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./services/state.service */ "./src/app/services/state.service.ts");
-/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./services/appevents.service */ "./src/app/services/appevents.service.ts");
-/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./services/reference.service */ "./src/app/services/reference.service.ts");
-/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./services/settings.service */ "./src/app/services/settings.service.ts");
-/* harmony import */ var _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./services/rtqueue.service */ "./src/app/services/rtqueue.service.ts");
-/* harmony import */ var _services_rtqueue_item_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./services/rtqueue-item.service */ "./src/app/services/rtqueue-item.service.ts");
-/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./services/accounts.service */ "./src/app/services/accounts.service.ts");
-/* harmony import */ var _services_account_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
-/* harmony import */ var _services_test_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./services/test.service */ "./src/app/services/test.service.ts");
-/* harmony import */ var _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./components/sign-in/sign-in.component */ "./src/app/components/sign-in/sign-in.component.ts");
-/* harmony import */ var _components_home_home_component__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./components/home/home.component */ "./src/app/components/home/home.component.ts");
-/* harmony import */ var _components_header_header_component__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./components/header/header.component */ "./src/app/components/header/header.component.ts");
-/* harmony import */ var _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./components/common/items-controls/items-controls.component */ "./src/app/components/common/items-controls/items-controls.component.ts");
-/* harmony import */ var _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./components/common/items-table/items-table.component */ "./src/app/components/common/items-table/items-table.component.ts");
-/* harmony import */ var _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./components/common/items-paginator/items-paginator.component */ "./src/app/components/common/items-paginator/items-paginator.component.ts");
-/* harmony import */ var _components_users_users_component__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./components/users/users.component */ "./src/app/components/users/users.component.ts");
-/* harmony import */ var _components_user_groups_user_groups_component__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./components/user-groups/user-groups.component */ "./src/app/components/user-groups/user-groups.component.ts");
-/* harmony import */ var _components_user_user_component__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./components/user/user.component */ "./src/app/components/user/user.component.ts");
-/* harmony import */ var _components_user_group_user_group_component__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./components/user-group/user-group.component */ "./src/app/components/user-group/user-group.component.ts");
-/* harmony import */ var _components_tags_tags_component__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./components/tags/tags.component */ "./src/app/components/tags/tags.component.ts");
-/* harmony import */ var _components_tag_tag_component__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./components/tag/tag.component */ "./src/app/components/tag/tag.component.ts");
-/* harmony import */ var _components_recievers_recievers_component__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./components/recievers/recievers.component */ "./src/app/components/recievers/recievers.component.ts");
-/* harmony import */ var _components_reciever_reciever_component__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./components/reciever/reciever.component */ "./src/app/components/reciever/reciever.component.ts");
-/* harmony import */ var _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./components/common/search-select/search-select.component */ "./src/app/components/common/search-select/search-select.component.ts");
-/* harmony import */ var _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./components/common/multi-select/multi-select.component */ "./src/app/components/common/multi-select/multi-select.component.ts");
-/* harmony import */ var _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./components/competitors/competitors.component */ "./src/app/components/competitors/competitors.component.ts");
-/* harmony import */ var _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./components/competitor/competitor.component */ "./src/app/components/competitor/competitor.component.ts");
-/* harmony import */ var _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./components/categories/categories.component */ "./src/app/components/categories/categories.component.ts");
-/* harmony import */ var _components_category_category_component__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./components/category/category.component */ "./src/app/components/category/category.component.ts");
-/* harmony import */ var _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./components/common/input-tree/input-tree.component */ "./src/app/components/common/input-tree/input-tree.component.ts");
-/* harmony import */ var _components_log_log_component__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./components/log/log.component */ "./src/app/components/log/log.component.ts");
-/* harmony import */ var _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./components/nav-trash/nav-trash.component */ "./src/app/components/nav-trash/nav-trash.component.ts");
-/* harmony import */ var _components_trash_trash_component__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./components/trash/trash.component */ "./src/app/components/trash/trash.component.ts");
-/* harmony import */ var _components_commands_commands_component__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./components/commands/commands.component */ "./src/app/components/commands/commands.component.ts");
-/* harmony import */ var _components_distributions_distributions_component__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./components/distributions/distributions.component */ "./src/app/components/distributions/distributions.component.ts");
-/* harmony import */ var _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./components/nav-appevts-log/nav-appevts-log.component */ "./src/app/components/nav-appevts-log/nav-appevts-log.component.ts");
-/* harmony import */ var _components_settings_settings_component__WEBPACK_IMPORTED_MODULE_88__ = __webpack_require__(/*! ./components/settings/settings.component */ "./src/app/components/settings/settings.component.ts");
-/* harmony import */ var _components_accounts_accounts_component__WEBPACK_IMPORTED_MODULE_89__ = __webpack_require__(/*! ./components/accounts/accounts.component */ "./src/app/components/accounts/accounts.component.ts");
-/* harmony import */ var _components_account_account_component__WEBPACK_IMPORTED_MODULE_90__ = __webpack_require__(/*! ./components/account/account.component */ "./src/app/components/account/account.component.ts");
-/* harmony import */ var _components_rtqueue_rtqueue_component__WEBPACK_IMPORTED_MODULE_91__ = __webpack_require__(/*! ./components/rtqueue/rtqueue.component */ "./src/app/components/rtqueue/rtqueue.component.ts");
-/* harmony import */ var _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_92__ = __webpack_require__(/*! ./components/common/items-import/items-import.component */ "./src/app/components/common/items-import/items-import.component.ts");
-/* harmony import */ var _components_races_races_component__WEBPACK_IMPORTED_MODULE_93__ = __webpack_require__(/*! ./components/races/races.component */ "./src/app/components/races/races.component.ts");
-/* harmony import */ var _components_race_race_component__WEBPACK_IMPORTED_MODULE_94__ = __webpack_require__(/*! ./components/race/race.component */ "./src/app/components/race/race.component.ts");
-/* harmony import */ var _components_go_go_component__WEBPACK_IMPORTED_MODULE_95__ = __webpack_require__(/*! ./components/go/go.component */ "./src/app/components/go/go.component.ts");
+/* harmony import */ var _services_results_service__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./services/results.service */ "./src/app/services/results.service.ts");
+/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./services/user-groups.service */ "./src/app/services/user-groups.service.ts");
+/* harmony import */ var _services_user_group_service__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./services/user-group.service */ "./src/app/services/user-group.service.ts");
+/* harmony import */ var _services_tags_service__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./services/tags.service */ "./src/app/services/tags.service.ts");
+/* harmony import */ var _services_tag_service__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./services/tag.service */ "./src/app/services/tag.service.ts");
+/* harmony import */ var _services_units_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./services/units.service */ "./src/app/services/units.service.ts");
+/* harmony import */ var _services_unit_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./services/unit.service */ "./src/app/services/unit.service.ts");
+/* harmony import */ var _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./services/hwtypes.service */ "./src/app/services/hwtypes.service.ts");
+/* harmony import */ var _services_hwtype_service__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./services/hwtype.service */ "./src/app/services/hwtype.service.ts");
+/* harmony import */ var _services_recievers_service__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./services/recievers.service */ "./src/app/services/recievers.service.ts");
+/* harmony import */ var _services_reciever_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./services/reciever.service */ "./src/app/services/reciever.service.ts");
+/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./services/log.service */ "./src/app/services/log.service.ts");
+/* harmony import */ var _services_log_item_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./services/log-item.service */ "./src/app/services/log-item.service.ts");
+/* harmony import */ var _services_commands_service__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./services/commands.service */ "./src/app/services/commands.service.ts");
+/* harmony import */ var _services_messages_service__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./services/messages.service */ "./src/app/services/messages.service.ts");
+/* harmony import */ var _services_distribution_service__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./services/distribution.service */ "./src/app/services/distribution.service.ts");
+/* harmony import */ var _services_distributions_service__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./services/distributions.service */ "./src/app/services/distributions.service.ts");
+/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./services/trash.service */ "./src/app/services/trash.service.ts");
+/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./services/state.service */ "./src/app/services/state.service.ts");
+/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./services/appevents.service */ "./src/app/services/appevents.service.ts");
+/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./services/reference.service */ "./src/app/services/reference.service.ts");
+/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./services/settings.service */ "./src/app/services/settings.service.ts");
+/* harmony import */ var _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./services/rtqueue.service */ "./src/app/services/rtqueue.service.ts");
+/* harmony import */ var _services_rtqueue_item_service__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./services/rtqueue-item.service */ "./src/app/services/rtqueue-item.service.ts");
+/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./services/accounts.service */ "./src/app/services/accounts.service.ts");
+/* harmony import */ var _services_account_service__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
+/* harmony import */ var _services_test_service__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./services/test.service */ "./src/app/services/test.service.ts");
+/* harmony import */ var _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./components/sign-in/sign-in.component */ "./src/app/components/sign-in/sign-in.component.ts");
+/* harmony import */ var _components_home_home_component__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./components/home/home.component */ "./src/app/components/home/home.component.ts");
+/* harmony import */ var _components_header_header_component__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./components/header/header.component */ "./src/app/components/header/header.component.ts");
+/* harmony import */ var _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./components/common/items-controls/items-controls.component */ "./src/app/components/common/items-controls/items-controls.component.ts");
+/* harmony import */ var _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./components/common/items-table/items-table.component */ "./src/app/components/common/items-table/items-table.component.ts");
+/* harmony import */ var _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./components/common/items-paginator/items-paginator.component */ "./src/app/components/common/items-paginator/items-paginator.component.ts");
+/* harmony import */ var _components_users_users_component__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./components/users/users.component */ "./src/app/components/users/users.component.ts");
+/* harmony import */ var _components_user_groups_user_groups_component__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./components/user-groups/user-groups.component */ "./src/app/components/user-groups/user-groups.component.ts");
+/* harmony import */ var _components_user_user_component__WEBPACK_IMPORTED_MODULE_70__ = __webpack_require__(/*! ./components/user/user.component */ "./src/app/components/user/user.component.ts");
+/* harmony import */ var _components_user_group_user_group_component__WEBPACK_IMPORTED_MODULE_71__ = __webpack_require__(/*! ./components/user-group/user-group.component */ "./src/app/components/user-group/user-group.component.ts");
+/* harmony import */ var _components_tags_tags_component__WEBPACK_IMPORTED_MODULE_72__ = __webpack_require__(/*! ./components/tags/tags.component */ "./src/app/components/tags/tags.component.ts");
+/* harmony import */ var _components_tag_tag_component__WEBPACK_IMPORTED_MODULE_73__ = __webpack_require__(/*! ./components/tag/tag.component */ "./src/app/components/tag/tag.component.ts");
+/* harmony import */ var _components_recievers_recievers_component__WEBPACK_IMPORTED_MODULE_74__ = __webpack_require__(/*! ./components/recievers/recievers.component */ "./src/app/components/recievers/recievers.component.ts");
+/* harmony import */ var _components_reciever_reciever_component__WEBPACK_IMPORTED_MODULE_75__ = __webpack_require__(/*! ./components/reciever/reciever.component */ "./src/app/components/reciever/reciever.component.ts");
+/* harmony import */ var _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_76__ = __webpack_require__(/*! ./components/common/search-select/search-select.component */ "./src/app/components/common/search-select/search-select.component.ts");
+/* harmony import */ var _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_77__ = __webpack_require__(/*! ./components/common/multi-select/multi-select.component */ "./src/app/components/common/multi-select/multi-select.component.ts");
+/* harmony import */ var _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_78__ = __webpack_require__(/*! ./components/competitors/competitors.component */ "./src/app/components/competitors/competitors.component.ts");
+/* harmony import */ var _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_79__ = __webpack_require__(/*! ./components/competitor/competitor.component */ "./src/app/components/competitor/competitor.component.ts");
+/* harmony import */ var _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_80__ = __webpack_require__(/*! ./components/categories/categories.component */ "./src/app/components/categories/categories.component.ts");
+/* harmony import */ var _components_category_category_component__WEBPACK_IMPORTED_MODULE_81__ = __webpack_require__(/*! ./components/category/category.component */ "./src/app/components/category/category.component.ts");
+/* harmony import */ var _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_82__ = __webpack_require__(/*! ./components/common/input-tree/input-tree.component */ "./src/app/components/common/input-tree/input-tree.component.ts");
+/* harmony import */ var _components_log_log_component__WEBPACK_IMPORTED_MODULE_83__ = __webpack_require__(/*! ./components/log/log.component */ "./src/app/components/log/log.component.ts");
+/* harmony import */ var _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_84__ = __webpack_require__(/*! ./components/nav-trash/nav-trash.component */ "./src/app/components/nav-trash/nav-trash.component.ts");
+/* harmony import */ var _components_trash_trash_component__WEBPACK_IMPORTED_MODULE_85__ = __webpack_require__(/*! ./components/trash/trash.component */ "./src/app/components/trash/trash.component.ts");
+/* harmony import */ var _components_commands_commands_component__WEBPACK_IMPORTED_MODULE_86__ = __webpack_require__(/*! ./components/commands/commands.component */ "./src/app/components/commands/commands.component.ts");
+/* harmony import */ var _components_distributions_distributions_component__WEBPACK_IMPORTED_MODULE_87__ = __webpack_require__(/*! ./components/distributions/distributions.component */ "./src/app/components/distributions/distributions.component.ts");
+/* harmony import */ var _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_88__ = __webpack_require__(/*! ./components/nav-appevts-log/nav-appevts-log.component */ "./src/app/components/nav-appevts-log/nav-appevts-log.component.ts");
+/* harmony import */ var _components_settings_settings_component__WEBPACK_IMPORTED_MODULE_89__ = __webpack_require__(/*! ./components/settings/settings.component */ "./src/app/components/settings/settings.component.ts");
+/* harmony import */ var _components_accounts_accounts_component__WEBPACK_IMPORTED_MODULE_90__ = __webpack_require__(/*! ./components/accounts/accounts.component */ "./src/app/components/accounts/accounts.component.ts");
+/* harmony import */ var _components_account_account_component__WEBPACK_IMPORTED_MODULE_91__ = __webpack_require__(/*! ./components/account/account.component */ "./src/app/components/account/account.component.ts");
+/* harmony import */ var _components_rtqueue_rtqueue_component__WEBPACK_IMPORTED_MODULE_92__ = __webpack_require__(/*! ./components/rtqueue/rtqueue.component */ "./src/app/components/rtqueue/rtqueue.component.ts");
+/* harmony import */ var _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_93__ = __webpack_require__(/*! ./components/common/items-import/items-import.component */ "./src/app/components/common/items-import/items-import.component.ts");
+/* harmony import */ var _components_races_races_component__WEBPACK_IMPORTED_MODULE_94__ = __webpack_require__(/*! ./components/races/races.component */ "./src/app/components/races/races.component.ts");
+/* harmony import */ var _components_race_race_component__WEBPACK_IMPORTED_MODULE_95__ = __webpack_require__(/*! ./components/race/race.component */ "./src/app/components/race/race.component.ts");
+/* harmony import */ var _components_go_go_component__WEBPACK_IMPORTED_MODULE_96__ = __webpack_require__(/*! ./components/go/go.component */ "./src/app/components/go/go.component.ts");
+/* harmony import */ var _components_results_results_component__WEBPACK_IMPORTED_MODULE_97__ = __webpack_require__(/*! ./components/results/results.component */ "./src/app/components/results/results.component.ts");
+
+
 
 
 
@@ -755,46 +773,47 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [
                 _components_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"],
-                _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_61__["SignInComponent"],
-                _components_home_home_component__WEBPACK_IMPORTED_MODULE_62__["HomeComponent"],
-                _components_header_header_component__WEBPACK_IMPORTED_MODULE_63__["HeaderComponent"],
-                _components_users_users_component__WEBPACK_IMPORTED_MODULE_67__["UsersComponent"],
-                _components_user_groups_user_groups_component__WEBPACK_IMPORTED_MODULE_68__["UserGroupsComponent"],
-                _components_user_user_component__WEBPACK_IMPORTED_MODULE_69__["UserComponent"],
-                _components_user_group_user_group_component__WEBPACK_IMPORTED_MODULE_70__["UserGroupComponent"],
-                _components_tags_tags_component__WEBPACK_IMPORTED_MODULE_71__["TagsComponent"],
-                _components_tag_tag_component__WEBPACK_IMPORTED_MODULE_72__["TagComponent"],
+                _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_62__["SignInComponent"],
+                _components_home_home_component__WEBPACK_IMPORTED_MODULE_63__["HomeComponent"],
+                _components_header_header_component__WEBPACK_IMPORTED_MODULE_64__["HeaderComponent"],
+                _components_users_users_component__WEBPACK_IMPORTED_MODULE_68__["UsersComponent"],
+                _components_user_groups_user_groups_component__WEBPACK_IMPORTED_MODULE_69__["UserGroupsComponent"],
+                _components_user_user_component__WEBPACK_IMPORTED_MODULE_70__["UserComponent"],
+                _components_user_group_user_group_component__WEBPACK_IMPORTED_MODULE_71__["UserGroupComponent"],
+                _components_tags_tags_component__WEBPACK_IMPORTED_MODULE_72__["TagsComponent"],
+                _components_tag_tag_component__WEBPACK_IMPORTED_MODULE_73__["TagComponent"],
                 _pipes_my_filter_pipe__WEBPACK_IMPORTED_MODULE_18__["MyFilterPipe"],
                 _pipes_keys_pipe__WEBPACK_IMPORTED_MODULE_19__["KeysPipe"],
-                _components_recievers_recievers_component__WEBPACK_IMPORTED_MODULE_73__["RecieversComponent"],
-                _components_reciever_reciever_component__WEBPACK_IMPORTED_MODULE_74__["RecieverComponent"],
+                _components_recievers_recievers_component__WEBPACK_IMPORTED_MODULE_74__["RecieversComponent"],
+                _components_reciever_reciever_component__WEBPACK_IMPORTED_MODULE_75__["RecieverComponent"],
                 _pipes_in_list_filter_pipe__WEBPACK_IMPORTED_MODULE_21__["InListFilterPipe"],
-                _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_75__["SearchSelectComponent"],
-                _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_76__["MultiSelectComponent"],
+                _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_76__["SearchSelectComponent"],
+                _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_77__["MultiSelectComponent"],
                 _pipes_as_result_pipe__WEBPACK_IMPORTED_MODULE_20__["AsResultPipe"],
-                _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_77__["CompetitorsComponent"],
-                _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_78__["CompetitorComponent"],
-                _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_79__["CategoriesComponent"],
-                _components_category_category_component__WEBPACK_IMPORTED_MODULE_80__["CategoryComponent"],
-                _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_81__["InputTreeComponent"],
-                _components_log_log_component__WEBPACK_IMPORTED_MODULE_82__["LogComponent"],
+                _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_78__["CompetitorsComponent"],
+                _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_79__["CompetitorComponent"],
+                _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_80__["CategoriesComponent"],
+                _components_category_category_component__WEBPACK_IMPORTED_MODULE_81__["CategoryComponent"],
+                _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_82__["InputTreeComponent"],
+                _components_log_log_component__WEBPACK_IMPORTED_MODULE_83__["LogComponent"],
                 _pipes_order_by_pipe__WEBPACK_IMPORTED_MODULE_22__["OrderByPipe"],
-                _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_83__["NavTrashComponent"],
-                _components_trash_trash_component__WEBPACK_IMPORTED_MODULE_84__["TrashComponent"],
-                _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_64__["ItemsControlsComponent"],
-                _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_65__["ItemsTableComponent"],
-                _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_66__["ItemsPaginatorComponent"],
-                _components_commands_commands_component__WEBPACK_IMPORTED_MODULE_85__["CommandsComponent"],
-                _components_distributions_distributions_component__WEBPACK_IMPORTED_MODULE_86__["DistributionsComponent"],
-                _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_87__["NavAPPEvtsLogComponent"],
-                _components_settings_settings_component__WEBPACK_IMPORTED_MODULE_88__["SettingsComponent"],
-                _components_accounts_accounts_component__WEBPACK_IMPORTED_MODULE_89__["AccountsComponent"],
-                _components_account_account_component__WEBPACK_IMPORTED_MODULE_90__["AccountComponent"],
-                _components_rtqueue_rtqueue_component__WEBPACK_IMPORTED_MODULE_91__["RTQueueComponent"],
-                _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_92__["ItemsImportComponent"],
-                _components_races_races_component__WEBPACK_IMPORTED_MODULE_93__["RacesComponent"],
-                _components_race_race_component__WEBPACK_IMPORTED_MODULE_94__["RaceComponent"],
-                _components_go_go_component__WEBPACK_IMPORTED_MODULE_95__["GoComponent"],
+                _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_84__["NavTrashComponent"],
+                _components_trash_trash_component__WEBPACK_IMPORTED_MODULE_85__["TrashComponent"],
+                _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_65__["ItemsControlsComponent"],
+                _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_66__["ItemsTableComponent"],
+                _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_67__["ItemsPaginatorComponent"],
+                _components_commands_commands_component__WEBPACK_IMPORTED_MODULE_86__["CommandsComponent"],
+                _components_distributions_distributions_component__WEBPACK_IMPORTED_MODULE_87__["DistributionsComponent"],
+                _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_88__["NavAPPEvtsLogComponent"],
+                _components_settings_settings_component__WEBPACK_IMPORTED_MODULE_89__["SettingsComponent"],
+                _components_accounts_accounts_component__WEBPACK_IMPORTED_MODULE_90__["AccountsComponent"],
+                _components_account_account_component__WEBPACK_IMPORTED_MODULE_91__["AccountComponent"],
+                _components_rtqueue_rtqueue_component__WEBPACK_IMPORTED_MODULE_92__["RTQueueComponent"],
+                _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_93__["ItemsImportComponent"],
+                _components_races_races_component__WEBPACK_IMPORTED_MODULE_94__["RacesComponent"],
+                _components_race_race_component__WEBPACK_IMPORTED_MODULE_95__["RaceComponent"],
+                _components_go_go_component__WEBPACK_IMPORTED_MODULE_96__["GoComponent"],
+                _components_results_results_component__WEBPACK_IMPORTED_MODULE_97__["ResultsComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -821,7 +840,7 @@ var AppModule = /** @class */ (function () {
                 _services_api_service__WEBPACK_IMPORTED_MODULE_17__["APIService"],
                 _services_item_service__WEBPACK_IMPORTED_MODULE_23__["ItemService"],
                 _services_user_service__WEBPACK_IMPORTED_MODULE_26__["UserService"],
-                _services_user_groups_service__WEBPACK_IMPORTED_MODULE_35__["UserGroupsService"],
+                _services_user_groups_service__WEBPACK_IMPORTED_MODULE_36__["UserGroupsService"],
                 _services_items_service__WEBPACK_IMPORTED_MODULE_24__["ItemsService"],
                 _services_users_service__WEBPACK_IMPORTED_MODULE_25__["UsersService"],
                 _services_competitors_service__WEBPACK_IMPORTED_MODULE_27__["CompetitorsService"],
@@ -832,31 +851,32 @@ var AppModule = /** @class */ (function () {
                 _services_race_service__WEBPACK_IMPORTED_MODULE_32__["RaceService"],
                 _services_events_service__WEBPACK_IMPORTED_MODULE_33__["EventsService"],
                 _services_event_service__WEBPACK_IMPORTED_MODULE_34__["EventService"],
-                _services_user_group_service__WEBPACK_IMPORTED_MODULE_36__["UserGroupService"],
-                _services_tags_service__WEBPACK_IMPORTED_MODULE_37__["TagsService"],
-                _services_tag_service__WEBPACK_IMPORTED_MODULE_38__["TagService"],
-                _services_units_service__WEBPACK_IMPORTED_MODULE_39__["UnitsService"],
-                _services_unit_service__WEBPACK_IMPORTED_MODULE_40__["UnitService"],
-                _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_41__["HWTypesService"],
-                _services_hwtype_service__WEBPACK_IMPORTED_MODULE_42__["HWTypeService"],
-                _services_recievers_service__WEBPACK_IMPORTED_MODULE_43__["RecieversService"],
-                _services_reciever_service__WEBPACK_IMPORTED_MODULE_44__["RecieverService"],
-                _services_log_service__WEBPACK_IMPORTED_MODULE_45__["LogService"],
-                _services_log_item_service__WEBPACK_IMPORTED_MODULE_46__["LogItemService"],
-                _services_trash_service__WEBPACK_IMPORTED_MODULE_51__["TrashService"],
-                _services_distribution_service__WEBPACK_IMPORTED_MODULE_49__["DistributionService"],
-                _services_distributions_service__WEBPACK_IMPORTED_MODULE_50__["DistributionsService"],
-                _services_state_service__WEBPACK_IMPORTED_MODULE_52__["StateService"],
-                _services_commands_service__WEBPACK_IMPORTED_MODULE_47__["CommandsService"],
-                _services_messages_service__WEBPACK_IMPORTED_MODULE_48__["MessagesService"],
-                _services_appevents_service__WEBPACK_IMPORTED_MODULE_53__["APPEventsService"],
-                _services_reference_service__WEBPACK_IMPORTED_MODULE_54__["ReferenceService"],
-                _services_settings_service__WEBPACK_IMPORTED_MODULE_55__["SettingsService"],
-                _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_56__["RTQueueService"],
-                _services_rtqueue_item_service__WEBPACK_IMPORTED_MODULE_57__["RTQueueItemService"],
-                _services_accounts_service__WEBPACK_IMPORTED_MODULE_58__["AccountsService"],
-                _services_account_service__WEBPACK_IMPORTED_MODULE_59__["AccountService"],
-                _services_test_service__WEBPACK_IMPORTED_MODULE_60__["TestService"],
+                _services_results_service__WEBPACK_IMPORTED_MODULE_35__["ResultsService"],
+                _services_user_group_service__WEBPACK_IMPORTED_MODULE_37__["UserGroupService"],
+                _services_tags_service__WEBPACK_IMPORTED_MODULE_38__["TagsService"],
+                _services_tag_service__WEBPACK_IMPORTED_MODULE_39__["TagService"],
+                _services_units_service__WEBPACK_IMPORTED_MODULE_40__["UnitsService"],
+                _services_unit_service__WEBPACK_IMPORTED_MODULE_41__["UnitService"],
+                _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_42__["HWTypesService"],
+                _services_hwtype_service__WEBPACK_IMPORTED_MODULE_43__["HWTypeService"],
+                _services_recievers_service__WEBPACK_IMPORTED_MODULE_44__["RecieversService"],
+                _services_reciever_service__WEBPACK_IMPORTED_MODULE_45__["RecieverService"],
+                _services_log_service__WEBPACK_IMPORTED_MODULE_46__["LogService"],
+                _services_log_item_service__WEBPACK_IMPORTED_MODULE_47__["LogItemService"],
+                _services_trash_service__WEBPACK_IMPORTED_MODULE_52__["TrashService"],
+                _services_distribution_service__WEBPACK_IMPORTED_MODULE_50__["DistributionService"],
+                _services_distributions_service__WEBPACK_IMPORTED_MODULE_51__["DistributionsService"],
+                _services_state_service__WEBPACK_IMPORTED_MODULE_53__["StateService"],
+                _services_commands_service__WEBPACK_IMPORTED_MODULE_48__["CommandsService"],
+                _services_messages_service__WEBPACK_IMPORTED_MODULE_49__["MessagesService"],
+                _services_appevents_service__WEBPACK_IMPORTED_MODULE_54__["APPEventsService"],
+                _services_reference_service__WEBPACK_IMPORTED_MODULE_55__["ReferenceService"],
+                _services_settings_service__WEBPACK_IMPORTED_MODULE_56__["SettingsService"],
+                _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_57__["RTQueueService"],
+                _services_rtqueue_item_service__WEBPACK_IMPORTED_MODULE_58__["RTQueueItemService"],
+                _services_accounts_service__WEBPACK_IMPORTED_MODULE_59__["AccountsService"],
+                _services_account_service__WEBPACK_IMPORTED_MODULE_60__["AccountService"],
+                _services_test_service__WEBPACK_IMPORTED_MODULE_61__["TestService"],
             ],
             bootstrap: [_components_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"]]
         })
@@ -1197,6 +1217,9 @@ __webpack_require__.r(__webpack_exports__);
 var CategoriesComponent = /** @class */ (function () {
     function CategoriesComponent(app) {
         this.app = app;
+        this.controlsOptions = {
+            clearBtn: true
+        };
         this.tableOptions = {
             fieldNames: [
                 // 'accountId',
@@ -2427,7 +2450,7 @@ __webpack_require__.r(__webpack_exports__);
 var CompetitorsComponent = /** @class */ (function () {
     function CompetitorsComponent(app) {
         this.app = app;
-        this.contolsOptions = {
+        this.controlsOptions = {
             clearBtn: true
         };
         this.tableOptions = {
@@ -2536,7 +2559,7 @@ var DistributionsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".reg {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  margin: 2px;\n  border-radius: 5px;\n  background: rgba(0, 170, 255, 0.08);\n}\n.reg.start {\n  background: rgba(85, 255, 0, 0.1);\n}\n.reg.finish {\n  background: rgba(255, 128, 0, 0.1);\n}\n.clickable {\n  cursor: pointer;\n}\n.clickable:hover {\n  background: rgba(0, 20, 30, 0.1);\n}\n.scrolled {\n  overflow-y: auto;\n  max-height: 500px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9nby9EOlxcT1NQYW5lbFxcZG9tYWluc1xcbWZ0aW1pbmdcXGZyb250ZW5kL3NyY1xcYXBwXFxjb21wb25lbnRzXFxnb1xcZ28uY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvZ28vZ28uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQ0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtFQUNBLG1DQUFBO0FDQ0Y7QURBRTtFQUNFLGlDQUFBO0FDRUo7QURBRTtFQUNFLGtDQUFBO0FDRUo7QURFQTtFQUNFLGVBQUE7QUNDRjtBREFFO0VBQ0UsZ0NBQUE7QUNFSjtBREVBO0VBQ0UsZ0JBQUE7RUFDQSxpQkFBQTtBQ0NGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9nby9nby5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5yZWd7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgwLDAsMCwuMSk7XHJcbiAgbWFyZ2luOiAycHg7XHJcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gIGJhY2tncm91bmQ6IGhzbGEoMjAwLDI1MCw1MCwuMDgpO1xyXG4gICYuc3RhcnR7XHJcbiAgICBiYWNrZ3JvdW5kOiBoc2xhKDEwMCwyNTAsNTAsLjEpO1xyXG4gIH1cclxuICAmLmZpbmlzaHtcclxuICAgIGJhY2tncm91bmQ6IGhzbGEoMzAsMjUwLDUwLC4xKTtcclxuICB9XHJcbn1cclxuXHJcbi5jbGlja2FibGV7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG4gICY6aG92ZXJ7XHJcbiAgICBiYWNrZ3JvdW5kOiByZ2JhKDAsMjAsMzAsLjEpXHJcbiAgfVxyXG59XHJcblxyXG4uc2Nyb2xsZWR7XHJcbiAgb3ZlcmZsb3cteTogYXV0bztcclxuICBtYXgtaGVpZ2h0OiA1MDBweDsgIFxyXG59IiwiLnJlZyB7XG4gIGJvcmRlcjogMXB4IHNvbGlkIHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgbWFyZ2luOiAycHg7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgYmFja2dyb3VuZDogcmdiYSgwLCAxNzAsIDI1NSwgMC4wOCk7XG59XG4ucmVnLnN0YXJ0IHtcbiAgYmFja2dyb3VuZDogcmdiYSg4NSwgMjU1LCAwLCAwLjEpO1xufVxuLnJlZy5maW5pc2gge1xuICBiYWNrZ3JvdW5kOiByZ2JhKDI1NSwgMTI4LCAwLCAwLjEpO1xufVxuXG4uY2xpY2thYmxlIHtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuLmNsaWNrYWJsZTpob3ZlciB7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMjAsIDMwLCAwLjEpO1xufVxuXG4uc2Nyb2xsZWQge1xuICBvdmVyZmxvdy15OiBhdXRvO1xuICBtYXgtaGVpZ2h0OiA1MDBweDtcbn0iXX0= */"
+module.exports = ".reg {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  margin: 2px;\n  border-radius: 5px;\n  background: rgba(7, 151, 223, 0.2);\n}\n.reg.start {\n  background: rgba(66, 179, 9, 0.41);\n}\n.reg.finish {\n  background: rgba(255, 140, 0, 0.38);\n}\n.clickable {\n  cursor: pointer;\n}\n.clickable:hover {\n  background: rgba(0, 20, 30, 0.1);\n}\n.scrolled {\n  overflow-y: auto;\n  max-height: 500px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9nby9EOlxcT1NQYW5lbFxcZG9tYWluc1xcbWZ0aW1pbmdcXGZyb250ZW5kL3NyY1xcYXBwXFxjb21wb25lbnRzXFxnb1xcZ28uY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvZ28vZ28uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQ0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtFQUNBLGtDQUFBO0FDQ0Y7QURBRTtFQUNFLGtDQUFBO0FDRUo7QURBRTtFQUNFLG1DQUFBO0FDRUo7QURFQTtFQUNFLGVBQUE7QUNDRjtBREFFO0VBQ0UsZ0NBQUE7QUNFSjtBREVBO0VBQ0UsZ0JBQUE7RUFDQSxpQkFBQTtBQ0NGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9nby9nby5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5yZWd7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgwLDAsMCwuMSk7XHJcbiAgbWFyZ2luOiAycHg7XHJcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gIGJhY2tncm91bmQ6IGhzbCgyMDBkZWcsIDk0JSwgNDUlICwgMjAlKTtcclxuICAmLnN0YXJ0e1xyXG4gICAgYmFja2dyb3VuZDogaHNsKDEwMGRlZywgOTAlLCAzNyUsIDQxJSk7XHJcbiAgfVxyXG4gICYuZmluaXNoe1xyXG4gICAgYmFja2dyb3VuZDogaHNsKDMzZGVnICwxMDAlLCA1MCUgLCAzOCUpXHJcbiAgfVxyXG59XHJcblxyXG4uY2xpY2thYmxle1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICAmOmhvdmVye1xyXG4gICAgYmFja2dyb3VuZDogcmdiYSgwLDIwLDMwLC4xKVxyXG4gIH1cclxufVxyXG5cclxuLnNjcm9sbGVke1xyXG4gIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgbWF4LWhlaWdodDogNTAwcHg7ICBcclxufSIsIi5yZWcge1xuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gIG1hcmdpbjogMnB4O1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGJhY2tncm91bmQ6IHJnYmEoNywgMTUxLCAyMjMsIDAuMik7XG59XG4ucmVnLnN0YXJ0IHtcbiAgYmFja2dyb3VuZDogcmdiYSg2NiwgMTc5LCA5LCAwLjQxKTtcbn1cbi5yZWcuZmluaXNoIHtcbiAgYmFja2dyb3VuZDogcmdiYSgyNTUsIDE0MCwgMCwgMC4zOCk7XG59XG5cbi5jbGlja2FibGUge1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG4uY2xpY2thYmxlOmhvdmVyIHtcbiAgYmFja2dyb3VuZDogcmdiYSgwLCAyMCwgMzAsIDAuMSk7XG59XG5cbi5zY3JvbGxlZCB7XG4gIG92ZXJmbG93LXk6IGF1dG87XG4gIG1heC1oZWlnaHQ6IDUwMHB4O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -3152,11 +3175,15 @@ var RacesComponent = /** @class */ (function () {
         this.tableOptions = {
             fieldNames: [
                 'name',
+                'go',
+                'results',
                 'from',
                 'to',
             ],
             fields: {
                 name: { type: 'link' },
+                go: { type: 'link', path: 'go/', idName: 'id', staticValue: 'Войти в гонку' },
+                results: { type: 'link', path: 'results/', idName: 'id', staticValue: 'Результаты' },
             },
         };
         this.itemType = 'races';
@@ -3365,6 +3392,76 @@ var RecieversComponent = /** @class */ (function () {
         })
     ], RecieversComponent);
     return RecieversComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/results/results.component.scss":
+/*!***********************************************************!*\
+  !*** ./src/app/components/results/results.component.scss ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2NvbXBvbmVudHMvcmVzdWx0cy9yZXN1bHRzLmNvbXBvbmVudC5zY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/components/results/results.component.ts":
+/*!*********************************************************!*\
+  !*** ./src/app/components/results/results.component.ts ***!
+  \*********************************************************/
+/*! exports provided: ResultsComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResultsComponent", function() { return ResultsComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_app_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/app.service */ "./src/app/services/app.service.ts");
+
+
+
+
+
+
+var ResultsComponent = /** @class */ (function () {
+    function ResultsComponent(route, app, router) {
+        this.route = route;
+        this.app = app;
+        this.router = router;
+    }
+    ResultsComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.app.ifAppReady()
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["switchMap"])(function () { return _this.route.params; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function (params) {
+            if (params['raceId']) {
+                _this.app.results.race = _this.app.races._index.id[params['raceId']];
+                _this.app.results.get();
+            }
+            else {
+                //this.app.results.reset();
+            }
+        })).subscribe(function () { });
+    };
+    ResultsComponent.ctorParameters = function () { return [
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
+        { type: _services_app_service__WEBPACK_IMPORTED_MODULE_4__["AppService"] },
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"] }
+    ]; };
+    ResultsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-results',
+            template: __webpack_require__(/*! raw-loader!./results.component.html */ "./node_modules/raw-loader/index.js!./src/app/components/results/results.component.html"),
+            styles: [__webpack_require__(/*! ./results.component.scss */ "./src/app/components/results/results.component.scss")]
+        })
+    ], ResultsComponent);
+    return ResultsComponent;
 }());
 
 
@@ -5021,21 +5118,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_races_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/races.service */ "./src/app/services/races.service.ts");
 /* harmony import */ var _services_go_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/go.service */ "./src/app/services/go.service.ts");
 /* harmony import */ var _services_events_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../services/events.service */ "./src/app/services/events.service.ts");
-/* harmony import */ var _services_users_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../services/users.service */ "./src/app/services/users.service.ts");
-/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../services/user-groups.service */ "./src/app/services/user-groups.service.ts");
-/* harmony import */ var _services_tags_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../services/tags.service */ "./src/app/services/tags.service.ts");
-/* harmony import */ var _services_units_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../services/units.service */ "./src/app/services/units.service.ts");
-/* harmony import */ var _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../services/hwtypes.service */ "./src/app/services/hwtypes.service.ts");
-/* harmony import */ var _services_recievers_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../services/recievers.service */ "./src/app/services/recievers.service.ts");
-/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../services/log.service */ "./src/app/services/log.service.ts");
-/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../services/trash.service */ "./src/app/services/trash.service.ts");
-/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../services/state.service */ "./src/app/services/state.service.ts");
-/* harmony import */ var _services_distributions_service__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../services/distributions.service */ "./src/app/services/distributions.service.ts");
-/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../services/appevents.service */ "./src/app/services/appevents.service.ts");
-/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../services/reference.service */ "./src/app/services/reference.service.ts");
-/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../services/settings.service */ "./src/app/services/settings.service.ts");
-/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../services/accounts.service */ "./src/app/services/accounts.service.ts");
-/* harmony import */ var _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../services/rtqueue.service */ "./src/app/services/rtqueue.service.ts");
+/* harmony import */ var _services_results_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../services/results.service */ "./src/app/services/results.service.ts");
+/* harmony import */ var _services_users_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../services/users.service */ "./src/app/services/users.service.ts");
+/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../services/user-groups.service */ "./src/app/services/user-groups.service.ts");
+/* harmony import */ var _services_tags_service__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../services/tags.service */ "./src/app/services/tags.service.ts");
+/* harmony import */ var _services_units_service__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../services/units.service */ "./src/app/services/units.service.ts");
+/* harmony import */ var _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../services/hwtypes.service */ "./src/app/services/hwtypes.service.ts");
+/* harmony import */ var _services_recievers_service__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../services/recievers.service */ "./src/app/services/recievers.service.ts");
+/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../services/log.service */ "./src/app/services/log.service.ts");
+/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../services/trash.service */ "./src/app/services/trash.service.ts");
+/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../services/state.service */ "./src/app/services/state.service.ts");
+/* harmony import */ var _services_distributions_service__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../services/distributions.service */ "./src/app/services/distributions.service.ts");
+/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../services/appevents.service */ "./src/app/services/appevents.service.ts");
+/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../services/reference.service */ "./src/app/services/reference.service.ts");
+/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../services/settings.service */ "./src/app/services/settings.service.ts");
+/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../services/accounts.service */ "./src/app/services/accounts.service.ts");
+/* harmony import */ var _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../services/rtqueue.service */ "./src/app/services/rtqueue.service.ts");
+
 
 
 
@@ -5063,7 +5162,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AppService = /** @class */ (function () {
-    function AppService(core, trash, settings, ref, APPEvents, state, users, categories, competitors, races, events, go, log, accounts, seasons, ugroups, tags, units, hwtypes, recievers, distributions, rtqueue) {
+    function AppService(core, trash, settings, ref, APPEvents, state, users, categories, competitors, races, events, go, results, log, accounts, seasons, ugroups, tags, units, hwtypes, recievers, distributions, rtqueue) {
         this.core = core;
         this.trash = trash;
         this.settings = settings;
@@ -5076,6 +5175,7 @@ var AppService = /** @class */ (function () {
         this.races = races;
         this.events = events;
         this.go = go;
+        this.results = results;
         this.log = log;
         this.accounts = accounts;
         this.seasons = seasons;
@@ -5117,6 +5217,8 @@ var AppService = /** @class */ (function () {
         this.rtqueue.app = this;
         this.trash.trashTypes = ['tags', 'recievers', 'competitors', 'categories', 'races', 'events', 'users', 'ugroups'];
         this.state.createDefaults(['tags', 'recievers', 'competitors', 'categories', 'races', 'events', 'users', 'ugroups', 'log', 'trash', 'distributions', 'accounts', 'rtqueue']);
+        this.go.app = this;
+        this.results.app = this;
     }
     AppService.prototype.onAppReady = function () {
         return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["fromEvent"])(document, 'appReady');
@@ -5148,27 +5250,28 @@ var AppService = /** @class */ (function () {
     };
     AppService.ctorParameters = function () { return [
         { type: _services_core_service__WEBPACK_IMPORTED_MODULE_4__["CoreService"] },
-        { type: _services_trash_service__WEBPACK_IMPORTED_MODULE_17__["TrashService"] },
-        { type: _services_settings_service__WEBPACK_IMPORTED_MODULE_22__["SettingsService"] },
-        { type: _services_reference_service__WEBPACK_IMPORTED_MODULE_21__["ReferenceService"] },
-        { type: _services_appevents_service__WEBPACK_IMPORTED_MODULE_20__["APPEventsService"] },
-        { type: _services_state_service__WEBPACK_IMPORTED_MODULE_18__["StateService"] },
-        { type: _services_users_service__WEBPACK_IMPORTED_MODULE_10__["UsersService"] },
+        { type: _services_trash_service__WEBPACK_IMPORTED_MODULE_18__["TrashService"] },
+        { type: _services_settings_service__WEBPACK_IMPORTED_MODULE_23__["SettingsService"] },
+        { type: _services_reference_service__WEBPACK_IMPORTED_MODULE_22__["ReferenceService"] },
+        { type: _services_appevents_service__WEBPACK_IMPORTED_MODULE_21__["APPEventsService"] },
+        { type: _services_state_service__WEBPACK_IMPORTED_MODULE_19__["StateService"] },
+        { type: _services_users_service__WEBPACK_IMPORTED_MODULE_11__["UsersService"] },
         { type: _services_categories_service__WEBPACK_IMPORTED_MODULE_6__["CategoriesService"] },
         { type: _services_competitors_service__WEBPACK_IMPORTED_MODULE_5__["CompetitorsService"] },
         { type: _services_races_service__WEBPACK_IMPORTED_MODULE_7__["RacesService"] },
         { type: _services_events_service__WEBPACK_IMPORTED_MODULE_9__["EventsService"] },
         { type: _services_go_service__WEBPACK_IMPORTED_MODULE_8__["GoService"] },
-        { type: _services_log_service__WEBPACK_IMPORTED_MODULE_16__["LogService"] },
-        { type: _services_accounts_service__WEBPACK_IMPORTED_MODULE_23__["AccountsService"] },
-        { type: _services_trash_service__WEBPACK_IMPORTED_MODULE_17__["TrashService"] },
-        { type: _services_user_groups_service__WEBPACK_IMPORTED_MODULE_11__["UserGroupsService"] },
-        { type: _services_tags_service__WEBPACK_IMPORTED_MODULE_12__["TagsService"] },
-        { type: _services_units_service__WEBPACK_IMPORTED_MODULE_13__["UnitsService"] },
-        { type: _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_14__["HWTypesService"] },
-        { type: _services_recievers_service__WEBPACK_IMPORTED_MODULE_15__["RecieversService"] },
-        { type: _services_distributions_service__WEBPACK_IMPORTED_MODULE_19__["DistributionsService"] },
-        { type: _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_24__["RTQueueService"] }
+        { type: _services_results_service__WEBPACK_IMPORTED_MODULE_10__["ResultsService"] },
+        { type: _services_log_service__WEBPACK_IMPORTED_MODULE_17__["LogService"] },
+        { type: _services_accounts_service__WEBPACK_IMPORTED_MODULE_24__["AccountsService"] },
+        { type: _services_trash_service__WEBPACK_IMPORTED_MODULE_18__["TrashService"] },
+        { type: _services_user_groups_service__WEBPACK_IMPORTED_MODULE_12__["UserGroupsService"] },
+        { type: _services_tags_service__WEBPACK_IMPORTED_MODULE_13__["TagsService"] },
+        { type: _services_units_service__WEBPACK_IMPORTED_MODULE_14__["UnitsService"] },
+        { type: _services_hwtypes_service__WEBPACK_IMPORTED_MODULE_15__["HWTypesService"] },
+        { type: _services_recievers_service__WEBPACK_IMPORTED_MODULE_16__["RecieversService"] },
+        { type: _services_distributions_service__WEBPACK_IMPORTED_MODULE_20__["DistributionsService"] },
+        { type: _services_rtqueue_service__WEBPACK_IMPORTED_MODULE_25__["RTQueueService"] }
     ]; };
     AppService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -5449,6 +5552,7 @@ var Competitor = /** @class */ (function (_super) {
     function Competitor(item_, _parent) {
         var _this = _super.call(this, item_, _parent) || this;
         _this._parent = _parent;
+        _this._lastT = 0;
         return _this;
     }
     Object.defineProperty(Competitor.prototype, "fullName", {
@@ -5951,9 +6055,12 @@ var GoService = /** @class */ (function () {
         this.race = null;
         this.t = (new Date()).getTime();
         this.tIntervalId = 0;
+        this.app = null;
         this.start = null;
         this.finish = null;
         this.raceEvents = null;
+        if (this.tIntervalId)
+            clearInterval(this.tIntervalId);
         this.tIntervalId = setInterval(function () {
             _this.t = (new Date()).getTime();
         }, 10);
@@ -5982,6 +6089,11 @@ var GoService = /** @class */ (function () {
                     item._lapT = item.t - compLapsT[item.competitorId];
                 }
                 compLapsT[item.competitorId] = item.t;
+                if (item.competitor) {
+                    item.competitor._lastT = _this.t - item.t;
+                    item.competitor._lap = item._lap;
+                    item.competitor._t = item.t;
+                }
             }
         });
         this.raceEvents = this.raceEvents.sort(function (a, b) { return (b.t - a.t); });
@@ -6963,6 +7075,74 @@ var ReferenceService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/services/results.service.ts":
+/*!*********************************************!*\
+  !*** ./src/app/services/results.service.ts ***!
+  \*********************************************/
+/*! exports provided: ResultsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResultsService", function() { return ResultsService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var ResultsService = /** @class */ (function () {
+    function ResultsService() {
+        this.race = null;
+        this.app = null;
+        this.start = null;
+        this.finish = null;
+        this.raceEvents = null;
+        this.items = {};
+        this.items2 = [];
+    }
+    ResultsService.prototype.get = function () {
+        var _this = this;
+        this.items2 = [];
+        this.items = {};
+        this.raceEvents = this.app.events.items.filter(function (item) { return 1 * item.raceId === 1 * _this.race.id; }).sort(function (a, b) { return (a.t - b.t); });
+        var compLapsT = {};
+        this.raceEvents.forEach(function (item) {
+            if (item.eventType === 2) {
+                _this.start = item;
+            }
+            if (item.eventType === 3) {
+                _this.finish = item;
+            }
+            if (item.eventType === 1) {
+                if (!_this.items[item.competitorId])
+                    _this.items[item.competitorId] = { events: [], competitor: item.competitor };
+                if (!compLapsT[item.competitorId] && _this.start) {
+                    item._lapT = item.t - _this.start.t;
+                }
+                else {
+                    item._lapT = item.t - compLapsT[item.competitorId];
+                }
+                compLapsT[item.competitorId] = item.t;
+                _this.items[item.competitorId].events.push(item);
+                _this.items[item.competitorId].t = item.t;
+            }
+        });
+        for (var key in this.items) {
+            this.items2.push(this.items[key]);
+        }
+        this.items2.sort(function (a, b) { return (a.t - b.t); });
+    };
+    ResultsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        })
+    ], ResultsService);
+    return ResultsService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/services/rtqueue-item.service.ts":
 /*!**************************************************!*\
   !*** ./src/app/services/rtqueue-item.service.ts ***!
@@ -7193,7 +7373,7 @@ var StateService = /** @class */ (function () {
                     _lap: '',
                 },
                 eventsTimeScale: 10000,
-                eventsLimit: 20,
+                eventsLimit: 50,
                 filter: {
                     competitorName: ''
                 }
