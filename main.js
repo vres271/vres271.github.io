@@ -162,7 +162,7 @@ module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [opt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"!app.go.race\">\r\n  <h4>Select race:</h4>\r\n    <table  class=\"mt-2 table\" id=\"items-table\">\r\n      <tr *ngFor=\"let item of app.races.items\">\r\n        <td><a class=\"nav-link\" routerLink=\"/go/{{item.id}}\"  href=\"\">{{item.name}}</a></td>\r\n      </tr>\r\n    </table>\r\n</div>\r\n\r\n<div *ngIf=\"app.go.race\">\r\n  <div class=\"row\"  id=\"recontainer\" >\r\n    <div class=\"col-xl-7 col-sm-6\">\r\n      <div >\r\n        <form class=\" mb-2\">\r\n          <div class=\"form-row\">\r\n            <div class=\"col-1\">\r\n              <button type=\"button\" (click)=\"resetEventsFilter()\" class=\"btn btn-light\"><fa-icon  [icon]=\"faBan\" class=\"grey\" title=\"Reset filters\"></fa-icon></button>\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.competitorNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.categoryName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Категория\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter._lap\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Круг\">\r\n            </div>\r\n            <div class=\"col\">\r\n              <select class=\"form-control\" [(ngModel)]=\"s.eventsTimeScale\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                <option value=\"\">0</option>\r\n                <option value=\"10000\">1/10000</option>\r\n                <option value=\"1000\">1/1000</option>\r\n                <option value=\"100\">1/100</option>\r\n              </select>\r\n            </div>\r\n            <div class=\"col\">\r\n              <select class=\"form-control\" [(ngModel)]=\"s.eventsLimit\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Кол-во\">\r\n                <option value=\"10000\">10000</option>\r\n                <option value=\"1000\">1000</option>\r\n                <option value=\"100\">100</option>\r\n                <option value=\"50\">50</option>\r\n                <option value=\"20\">20</option>\r\n              </select>\r\n            </div>\r\n          </div>\r\n        </form>        \r\n\r\n        <div class=\"scrolled\">\r\n          <div \r\n            *ngFor=\"let item of app.go.raceEvents  | myFilter: s.eventsFilter| slice:0:s.eventsLimit; index as i;\" \r\n            class=\"row reg {{item.eventType==2?'start':''}} {{item.eventType==3?'finish':''}}\"\r\n            (dblclick)=\"switchEditEventForm(item)\"\r\n            [ngStyle]=\"s.eventsTimeScale?{'margin-top': delayH(item, app.go.raceEvents, i)}:{}\"\r\n            >\r\n            <div class=\"col-md-1\">\r\n              <h3>{{item.competitorNum}}</h3>\r\n              <button *ngIf=\"editEventId===item.id\" type=\"button\" (click)=\"saveEvent(item)\" class=\"btn btn-primary\"><fa-icon  [icon]=\"faSave\"  title=\"Save\"></fa-icon></button>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              <div *ngIf=\"editEventId!==item.id\"><b>{{item.competitorName}}</b> </div>\r\n              <div *ngIf=\"editEventId===item.id\">\r\n                <div *ngIf=\"item.eventType===1\">\r\n                  <input type=\"text\" class=\"form-control\" [(ngModel)]=\"editEventFilter.fullNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\" (keyup)=\"setEditCopetitorId(item)\">\r\n                  <select class=\"form-control\"  [(ngModel)]=\"item.competitorId\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                    <option value=\"{{competitor.id}}\" *ngFor=\"let competitor of app.competitors.items | myFilter: editEventFilter | slice:0:10| asResult : editEventFilterresult;\">{{competitor.fullNameNum}}</option>\r\n                  </select>\r\n                </div>\r\n                <div  *ngIf=\"item.eventType===2\"  class=\"form-group\">\r\n                  <select multiple size=\"10\" [(ngModel)]=\"item.categoryIds\" [ngModelOptions]=\"{standalone: true}\" class=\"form-control\">\r\n                    <option [value]=\"category.id\" *ngFor=\"let category of app.categories.items\">{{category.name}}</option>\r\n                  </select>                    \r\n                </div> {{item._t}} {{item._t2}}\r\n                <div *ngIf=\"item.eventType===1\" class=\"form-group\">\r\n                  <input type=\"time\" step=\"1\" class=\"form-control\" [(ngModel)]=\"item._t\" [ngModelOptions]=\"{standalone: true}\" >\r\n                </div>                   \r\n                <div *ngIf=\"item.eventType===2\" class=\"form-group\">\r\n                  <input type=\"datetime-local\" step=\"1\" class=\"form-control\" [(ngModel)]=\"item._t2\" [ngModelOptions]=\"{standalone: true}\" >\r\n                </div>                   \r\n              </div>\r\n              <small>\r\n                {{(item.t-app.go.getStart.t-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n                <span *ngIf=\"item._lapT\">{{(item._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}</span>\r\n              </small>\r\n              <h4 *ngIf=\"item.eventType==2\">Start Race </h4>\r\n              <h4 *ngIf=\"item.eventType==3\">Finish Race</h4>\r\n              <small> {{item.t|date:'HH:mm:ss.SSS'}}</small>\r\n              <small *ngIf=\"item.eventType==1\"> start: {{app.go.getStart(item.categoryId).t|date:'HH:mm:ss.SSS'}}</small>\r\n            </div>\r\n            <div class=\"col-md-5\">\r\n              {{item.categoryName}}\r\n              <div *ngIf=\"item.eventType==2\">\r\n                <div *ngFor=\"let categoryId of item.categoryIds\"><small>{{app.categories._index.id[categoryId].name}}</small></div>\r\n              </div>\r\n            </div>\r\n            <div class=\"col-md-1\"><small *ngIf=\"item._lap\">{{item._lap}}</small></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <div class=\"col-xl-5 col-sm-6\">\r\n      <h5>\r\n        {{app.go.race.name}} \r\n        <span *ngIf=\"app.go.getStart()\"> | {{app.go.getStart().t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.finish\"> | {{app.go.finish.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <!-- <span *ngIf=\"app.go.start && !app.go.start\"> | {{(app.go.t-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span> -->\r\n      </h5>\r\n\r\n      <form  (submit)=\"app.go.getStart()&&onFormSubmit(1,result.items[0].id)\" class=\" mb-2 \">\r\n        <div class=\"form-row\">\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control form-control-lg   mr-2\" [(ngModel)]=\"s.filter.competitorName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Фильтр\">\r\n          </div>\r\n          <!-- <button class=\"btn btn-primary btn-lg mr-2\" type=\"submit\">Register lap</button> -->\r\n          <div class=\"col\">\r\n            <div style=\"width:285px;\">\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"!app.go.getStart()\"  type=\"button\" (click)=\"onFormSubmit(1,0);\" >Пустое</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\"  type=\"button\" (click)=\"onFormSubmit(2,0);\" >Start</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.finish\" type=\"button\" (click)=\" onFormSubmit(3,0);\" >Finish</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </form>\r\n      <table class=\"table\">\r\n        <tr \r\n          *ngFor=\"let item of app.competitors.items | myFilter:{fullNameNum:s.filter.competitorName} | orderBy : ['-_lastT']  | slice:0:10 | asResult : result; index as i;\"  \r\n          (click)=\"app.go.getStart()&&onFormSubmit(1,item.id);\"\r\n          class=\"clickable\" \r\n          >\r\n          <td width=\"40px\">{{item.num}}</td>\r\n          <td>{{item.fullName}}</td>\r\n          <td><span *ngIf=\"item._lastT\" >{{(item._t-app.go.getStart(item.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}</span></td>\r\n          \r\n\r\n          <!-- <td><span *ngIf=\"item._lastT\" >{{(item._lastT-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span></td> -->\r\n          <td><small *ngIf=\"item._lap\">{{item._lap}}</small></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n"
+module.exports = "<div *ngIf=\"!app.go.race\">\r\n  <h4>Select race:</h4>\r\n    <table  class=\"mt-2 table\" id=\"items-table\">\r\n      <tr *ngFor=\"let item of app.races.items\">\r\n        <td><a class=\"nav-link\" routerLink=\"/go/{{item.id}}\"  href=\"\">{{item.name}}</a></td>\r\n      </tr>\r\n    </table>\r\n</div>\r\n\r\n<div *ngIf=\"app.go.race\" >\r\n  <div class=\"row\"  id=\"recontainer\" >\r\n    <div class=\"col-xl-7 col-sm-6\">\r\n      <form class=\" mb-2\">\r\n        <div class=\"form-row\">\r\n          <div class=\"col-1\">\r\n            <button type=\"button\" (click)=\"resetEventsFilter()\" class=\"btn btn-light\"><fa-icon  [icon]=\"faBan\" class=\"grey\" title=\"Reset filters\"></fa-icon></button>\r\n          </div>\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.competitorNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Участник\">\r\n          </div>\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter.categoryName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Категория\">\r\n          </div>\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control\" [(ngModel)]=\"s.eventsFilter._lap\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Круг\">\r\n          </div>\r\n          <div class=\"col\">\r\n            <select class=\"form-control\" [(ngModel)]=\"s.eventsTimeScale\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n              <option value=\"\">0</option>\r\n              <option value=\"10000\">1/10000</option>\r\n              <option value=\"1000\">1/1000</option>\r\n              <option value=\"100\">1/100</option>\r\n            </select>\r\n          </div>\r\n          <div class=\"col\">\r\n            <select class=\"form-control\" [(ngModel)]=\"s.eventsLimit\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Кол-во\">\r\n              <option value=\"10000\">10000</option>\r\n              <option value=\"1000\">1000</option>\r\n              <option value=\"100\">100</option>\r\n              <option value=\"50\">50</option>\r\n              <option value=\"20\">20</option>\r\n            </select>\r\n          </div>\r\n        </div>\r\n      </form>        \r\n      <!-- <div class=\"\" *ngFor=\"let competitor of app.competitors.items | myFilter: editEventFilter | orderBySelectValue: 'id' : 10 \">{{competitor.id}} {{competitor.fullNameNum}}</div> -->\r\n      <div id=\"scrolledTarget\">\r\n        <div class=\"scroll-bg\">\r\n          <div \r\n            *ngFor=\"let item of app.go.raceEvents  | myFilter: s.eventsFilter| slice:0:s.eventsLimit; index as i;\" \r\n            class=\"row reg {{item.eventType==2?'start':''}} {{item.eventType==3?'finish':''}}\"\r\n            (dblclick)=\"switchEditEventForm(item, false)\"\r\n            [ngStyle]=\"s.eventsTimeScale?{'margin-top': delayH(item, app.go.raceEvents, i)}:{}\"\r\n          >\r\n          <div class=\"col-md-1\">\r\n            <h3>{{item.competitorNum}}</h3>\r\n          </div>\r\n          <div class=\"col-md-5\">\r\n            <div *ngIf=\"editEventId!==item.id\">\r\n              <span class=\"pointer silver\" (click)=\"switchEditEventForm(item, false)\" title=\"{{'Edit'|translate}}\"><fa-icon [icon]=\"faEdit\"></fa-icon></span>\r\n              <b> {{item.competitorName}}</b> \r\n              <div *ngIf=\"item.desc\">{{item.desc}}</div>\r\n            </div>\r\n            <div *ngIf=\"editEventId===item.id\">\r\n              <div *ngIf=\"item.eventType===1\" class=\"mt-1\">\r\n                <div class=\"input-group-sm\" style=\"width: 170px;\">\r\n                  <input type=\"text\" class=\"form-control\" [(ngModel)]=\"editEventFilter.fullNameNum\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Фильтр по участнику\" (keyup)=\"setEditCopetitorId(item)\">\r\n                </div>\r\n                <select class=\"form-control\"  [(ngModel)]=\"item.competitorId\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Масштаб времени\">\r\n                  <option [value]=\"0\"></option>\r\n                  <option [value]=\"competitor.id\" *ngFor=\"let competitor of app.competitors.items | myFilter: editEventFilter |  asResult : editEventFilterresult;\">{{competitor.fullNameNum}}</option>\r\n                </select>\r\n              </div>\r\n              <div  *ngIf=\"item.eventType===2\"  class=\"form-group\">\r\n                <select multiple size=\"10\" [(ngModel)]=\"item.categoryIds\" [ngModelOptions]=\"{standalone: true}\" class=\"form-control\">\r\n                  <option [value]=\"category.id\" *ngFor=\"let category of app.categories.items\">{{category.name}}</option>\r\n                </select>                    \r\n              </div> \r\n              <div>\r\n                <label>Дополнительно</label>\r\n                <textarea name=\"\" [(ngModel)]=\"item.desc\" [ngModelOptions]=\"{standalone: true}\" class=\"form-control\"   rows=\"1\" ></textarea>\r\n              </div>\r\n              <div  class=\"form-group\">\r\n                <label>Абсолютное время</label>\r\n                <input type=\"datetime-local\" min=\"{{app.go.getStart(item.categoryId).t|date:'yyyy-MM-ddTHH:mm:ss'}}\" max=\"{{app.go.t|date:'yyyy-MM-ddT23:59:59'}}\" class=\"form-control\" [(ngModel)]=\"item.datetime\" [ngModelOptions]=\"{standalone: true}\" >\r\n              </div>\r\n              <div *ngIf=\"item.eventType===1 && 1*item.competitorId\" class=\"form-group\">\r\n                <label>Время со старта категории</label>\r\n                <input type=\"time\" class=\"form-control\" [(ngModel)]=\"item.raceTime\" [ngModelOptions]=\"{standalone: true}\" >\r\n              </div>\r\n              <div *ngIf=\"item.eventType===1\" class=\"form-group\">\r\n                <label>Время с первого старта</label>\r\n                <input type=\"time\" class=\"form-control\" [(ngModel)]=\"item.raceTimeFirst\" [ngModelOptions]=\"{standalone: true}\"  >\r\n              </div>\r\n              <small class=\"grey\">t: {{item.t}} datetime: {{item.datetime}} raceTime: {{item.raceTime}}</small>\r\n              <!-- <div *ngIf=\"item.eventType===2\" class=\"form-group\"> -->\r\n                <!-- <input type=\"datetime-local\"  class=\"form-control\" [(ngModel)]=\"item._t2\" [ngModelOptions]=\"{standalone: true}\" > -->\r\n              <!-- </div> -->\r\n            </div>\r\n            <h4 *ngIf=\"item.eventType==2\">Start Race </h4>\r\n            <h4 *ngIf=\"item.eventType==3\">Finish Race</h4>\r\n            <small *ngIf=\"item._raceT\" class=\"mr-3\" >race: {{(item._raceT-4*3600000)|date:'HH:mm:ss.SSS'}}</small>\r\n            <small *ngIf=\"item._lapT\" class=\"mr-3\" >lap {{item._lap}} : {{(item._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}</small>\r\n            <small class=\"mr-3\">abs: {{item.t|date:'HH:mm:ss.SSS'}}</small>\r\n            <div class=\"form-group mt-2\">\r\n              <button *ngIf=\"editEventId===item.id\" type=\"button\" (click)=\"saveEvent(item)\" class=\"btn btn-primary mr-1\"><fa-icon  [icon]=\"faSave\"  title=\"Save\"></fa-icon> Сохранить</button>\r\n              <button *ngIf=\"editEventId===item.id\" type=\"button\" (click)=\"switchEditEventForm(item, false)\" class=\"btn btn-light \"><fa-icon  [icon]=\"faTimes\"  title=\"Cancel\"></fa-icon> Отменить</button>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-4\" >\r\n            <div>{{item.categoryName}}</div>\r\n            <small *ngIf=\"item.eventType==1\"> start: {{app.go.getStart(item.categoryId).t|date:'HH:mm:ss.SSS'}}</small>\r\n            <div *ngIf=\"item.eventType==2\">\r\n              <div *ngFor=\"let categoryId of item.categoryIds\"><small>{{app.categories._index.id[categoryId].name}}</small></div>\r\n            </div>\r\n          </div>\r\n          <div class=\"col-md-2 text-right\">\r\n            <span class=\"tomato pointer\" *ngIf=\"!item._delDialog\" (click)=\"item._delDialog = true\" title=\"{{'Del'|translate}}\"><fa-icon [icon]=\"faTrashAlt\"></fa-icon></span>\r\n            <div *ngIf=\"item._delDialog\" class=\"mt-2\">\r\n              <button type=\"button\" (click)=\"delEvent(item)\" class=\"btn btn-danger btn-sm\">Del</button>\r\n              <button type=\"button\" (click)=\"item._delDialog = false\" class=\"btn btn-outline-secondary btn-sm ml-1\">Cancel</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n  </div>\r\n    <div class=\"col-xl-5 col-sm-6\">\r\n      <h5>\r\n        <a routerLink=\"/results/{{app.go.race.id}}\" >{{app.go.race.name}} </a>\r\n        <span *ngIf=\"app.go.getStart()\"> | {{app.go.getStart().t|date:'HH:mm:ss.SSS'}}</span>\r\n        <span *ngIf=\"app.go.finish\"> | {{app.go.finish.t|date:'HH:mm:ss.SSS'}}</span>\r\n        <!-- <span *ngIf=\"app.go.start && !app.go.start\"> | {{(app.go.t-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span> -->\r\n      </h5>\r\n\r\n      <form  (submit)=\"app.go.getStart()&&onFormSubmit(1,result.items[0]?result.items[0].id:0)\" class=\" mb-2 \">\r\n        <div class=\"form-row\">\r\n          <div class=\"col\">\r\n            <input type=\"text\" class=\"form-control form-control-lg   mr-2\" [(ngModel)]=\"s.filter.competitorName\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Фильтр\">\r\n          </div>\r\n          <!-- <button class=\"btn btn-primary btn-lg mr-2\" type=\"submit\">Register lap</button> -->\r\n          <div class=\"col\">\r\n            <div style=\"width:285px;\">\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"!app.go.getStart()\"  type=\"button\" (click)=\"onFormSubmit(1,0);\" >Пустое</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\"  type=\"button\" (click)=\"onFormSubmit(2,0);\" >Start</button>\r\n              <button class=\"btn btn-primary btn-lg mr-2\" [disabled]=\"app.go.finish\" type=\"button\" (click)=\" onFormSubmit(3,0);\" >Finish</button>\r\n            </div>\r\n          </div>\r\n        </div>\r\n        <div class=\"form-row mt-1\">\r\n          <div class=\"col\">\r\n            <textarea name=\"\" [(ngModel)]=\"newEvent.desc\" [ngModelOptions]=\"{standalone: true}\" class=\"form-control\"   rows=\"1\" placeholder=\"Дополнительно\"></textarea>\r\n          </div>\r\n        </div>\r\n      </form>\r\n      <table class=\"table\">\r\n        <tr \r\n          *ngFor=\"let item of app.competitors.items | myFilter:{fullNameNum:s.filter.competitorName} | orderBy : ['-_lastT']  | slice:0:10 | asResult : result; index as i;\"  \r\n          (click)=\"app.go.getStart()&&onFormSubmit(1,item.id);\"\r\n          class=\"clickable {{(i===0&&s.filter.competitorName)?'table-primary':''}}\" \r\n          >\r\n          <td width=\"40px\">{{item.num}}</td>\r\n          <td>{{item.fullName}}</td>\r\n          <td><span *ngIf=\"item._lastT\" >{{(item._t-app.go.getStart(item.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}</span></td>\r\n          \r\n\r\n          <!-- <td><span *ngIf=\"item._lastT\" >{{(item._lastT-app.go.start.t-4*3600000 )|date:'HH:mm:ss.SSS'}}</span></td> -->\r\n          <td><small *ngIf=\"item._lap\">{{item._lap}}</small></td>\r\n        </tr>\r\n      </table>\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n"
 
 /***/ }),
 
@@ -239,7 +239,7 @@ module.exports = "<app-items-controls [app]=\"app\" [itemType]=\"itemType\" [opt
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<table  class=\" table \" >\r\n  <ng-container *ngFor=\"let item of app.results.items2 | orderBy : ['pos'] ; index as i; \">\r\n    <tr *ngIf=\"!app.results.items2[i-1]||item.competitor.categoryId!==app.results.items2[i-1].competitor.categoryId\">\r\n      <th colspan=\"99\">{{item.competitor.categoryName}}</th>\r\n    </tr>\r\n    <tr>\r\n      <td width=\"40px\">{{i+1}}</td>\r\n      <td width=\"400px\">{{item.competitor.fullName}}</td>\r\n      <td width=\"80px\">{{item.competitor.num}}</td>\r\n      <td width=\"100px\">{{(item.events[item.events.length-1].t-app.results.getStart(item.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}</td>\r\n      <td *ngFor=\"let event of item.events\" width=\"100px\">\r\n        {{(event.t-app.results.getStart(item.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}<br>\r\n        {{(event._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n      </td>\r\n      <!-- <td>{{(item.t-app.results.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}</td> -->\r\n      <td></td>\r\n    </tr>\r\n  </ng-container>\r\n</table>\r\n"
+module.exports = "<table  class=\" table \" >\r\n  <ng-container *ngFor=\"let item of app.results.items2 | orderBy : ['pos'] ; index as i; \">\r\n    <tr *ngIf=\"!app.results.items2[i-1]||item.competitor.categoryId!==app.results.items2[i-1].competitor.categoryId\">\r\n      <th colspan=\"99\">{{item.competitor.categoryName}}</th>\r\n    </tr>\r\n    <tr>\r\n      <td width=\"40px\">{{item.res}}</td>\r\n      <td width=\"400px\">{{item.competitor.fullName}}</td>\r\n      <td width=\"80px\">{{item.competitor.num}}</td>\r\n      <td width=\"100px\">{{(item.events[item.events.length-1].t-app.results.getStart(item.competitor.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}</td>\r\n      <td *ngFor=\"let event of item.events\" width=\"100px\">\r\n        {{(event.t-app.results.getStart(item.categoryId).t-4*3600000)|date:'HH:mm:ss.SSS'}}<br>\r\n        {{(event._lapT-4*3600000)|date:'HH:mm:ss.SSS'}}\r\n      </td>\r\n      <!-- <td>{{(item.t-app.results.start.t-4*3600000)|date:'HH:mm:ss.SSS'}}</td> -->\r\n      <td><span *ngIf=\"item.res>1\">+{{(item.events[item.events.length-1].t-item.firstT-4*3600000)|date:'HH:mm:ss.SSS'}}</span></td>\r\n      <td></td>\r\n    </tr>\r\n  </ng-container>\r\n</table>\r\n"
 
 /***/ }),
 
@@ -385,52 +385,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pipes_as_result_pipe__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./pipes/as-result.pipe */ "./src/app/pipes/as-result.pipe.ts");
 /* harmony import */ var _pipes_in_list_filter_pipe__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./pipes/in-list-filter.pipe */ "./src/app/pipes/in-list-filter.pipe.ts");
 /* harmony import */ var _pipes_order_by_pipe__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./pipes/order-by.pipe */ "./src/app/pipes/order-by.pipe.ts");
-/* harmony import */ var _services_item_service__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./services/item.service */ "./src/app/services/item.service.ts");
-/* harmony import */ var _services_items_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./services/items.service */ "./src/app/services/items.service.ts");
-/* harmony import */ var _services_users_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./services/users.service */ "./src/app/services/users.service.ts");
-/* harmony import */ var _services_user_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./services/user.service */ "./src/app/services/user.service.ts");
-/* harmony import */ var _services_competitors_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./services/competitors.service */ "./src/app/services/competitors.service.ts");
-/* harmony import */ var _services_competitor_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./services/competitor.service */ "./src/app/services/competitor.service.ts");
-/* harmony import */ var _services_categories_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./services/categories.service */ "./src/app/services/categories.service.ts");
-/* harmony import */ var _services_category_service__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./services/category.service */ "./src/app/services/category.service.ts");
-/* harmony import */ var _services_races_service__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./services/races.service */ "./src/app/services/races.service.ts");
-/* harmony import */ var _services_race_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./services/race.service */ "./src/app/services/race.service.ts");
-/* harmony import */ var _services_events_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./services/events.service */ "./src/app/services/events.service.ts");
-/* harmony import */ var _services_event_service__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./services/event.service */ "./src/app/services/event.service.ts");
-/* harmony import */ var _services_results_service__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./services/results.service */ "./src/app/services/results.service.ts");
-/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./services/user-groups.service */ "./src/app/services/user-groups.service.ts");
-/* harmony import */ var _services_user_group_service__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./services/user-group.service */ "./src/app/services/user-group.service.ts");
-/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./services/log.service */ "./src/app/services/log.service.ts");
-/* harmony import */ var _services_log_item_service__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./services/log-item.service */ "./src/app/services/log-item.service.ts");
-/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./services/trash.service */ "./src/app/services/trash.service.ts");
-/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./services/state.service */ "./src/app/services/state.service.ts");
-/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./services/appevents.service */ "./src/app/services/appevents.service.ts");
-/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./services/reference.service */ "./src/app/services/reference.service.ts");
-/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./services/settings.service */ "./src/app/services/settings.service.ts");
-/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./services/accounts.service */ "./src/app/services/accounts.service.ts");
-/* harmony import */ var _services_account_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
-/* harmony import */ var _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./components/sign-in/sign-in.component */ "./src/app/components/sign-in/sign-in.component.ts");
-/* harmony import */ var _components_home_home_component__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./components/home/home.component */ "./src/app/components/home/home.component.ts");
-/* harmony import */ var _components_header_header_component__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./components/header/header.component */ "./src/app/components/header/header.component.ts");
-/* harmony import */ var _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./components/common/items-controls/items-controls.component */ "./src/app/components/common/items-controls/items-controls.component.ts");
-/* harmony import */ var _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./components/common/items-table/items-table.component */ "./src/app/components/common/items-table/items-table.component.ts");
-/* harmony import */ var _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./components/common/items-paginator/items-paginator.component */ "./src/app/components/common/items-paginator/items-paginator.component.ts");
-/* harmony import */ var _components_users_users_component__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./components/users/users.component */ "./src/app/components/users/users.component.ts");
-/* harmony import */ var _components_user_user_component__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./components/user/user.component */ "./src/app/components/user/user.component.ts");
-/* harmony import */ var _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./components/common/search-select/search-select.component */ "./src/app/components/common/search-select/search-select.component.ts");
-/* harmony import */ var _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./components/common/multi-select/multi-select.component */ "./src/app/components/common/multi-select/multi-select.component.ts");
-/* harmony import */ var _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./components/competitors/competitors.component */ "./src/app/components/competitors/competitors.component.ts");
-/* harmony import */ var _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./components/competitor/competitor.component */ "./src/app/components/competitor/competitor.component.ts");
-/* harmony import */ var _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./components/categories/categories.component */ "./src/app/components/categories/categories.component.ts");
-/* harmony import */ var _components_category_category_component__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./components/category/category.component */ "./src/app/components/category/category.component.ts");
-/* harmony import */ var _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./components/common/input-tree/input-tree.component */ "./src/app/components/common/input-tree/input-tree.component.ts");
-/* harmony import */ var _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./components/nav-appevts-log/nav-appevts-log.component */ "./src/app/components/nav-appevts-log/nav-appevts-log.component.ts");
-/* harmony import */ var _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./components/common/items-import/items-import.component */ "./src/app/components/common/items-import/items-import.component.ts");
-/* harmony import */ var _components_races_races_component__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./components/races/races.component */ "./src/app/components/races/races.component.ts");
-/* harmony import */ var _components_race_race_component__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./components/race/race.component */ "./src/app/components/race/race.component.ts");
-/* harmony import */ var _components_go_go_component__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./components/go/go.component */ "./src/app/components/go/go.component.ts");
-/* harmony import */ var _components_results_results_component__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./components/results/results.component */ "./src/app/components/results/results.component.ts");
-/* harmony import */ var _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./components/nav-trash/nav-trash.component */ "./src/app/components/nav-trash/nav-trash.component.ts");
+/* harmony import */ var _pipes_order_by_select_value_pipe__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./pipes/order-by-select_value.pipe */ "./src/app/pipes/order-by-select_value.pipe.ts");
+/* harmony import */ var _services_item_service__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./services/item.service */ "./src/app/services/item.service.ts");
+/* harmony import */ var _services_items_service__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./services/items.service */ "./src/app/services/items.service.ts");
+/* harmony import */ var _services_users_service__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./services/users.service */ "./src/app/services/users.service.ts");
+/* harmony import */ var _services_user_service__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./services/user.service */ "./src/app/services/user.service.ts");
+/* harmony import */ var _services_competitors_service__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./services/competitors.service */ "./src/app/services/competitors.service.ts");
+/* harmony import */ var _services_competitor_service__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./services/competitor.service */ "./src/app/services/competitor.service.ts");
+/* harmony import */ var _services_categories_service__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./services/categories.service */ "./src/app/services/categories.service.ts");
+/* harmony import */ var _services_category_service__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./services/category.service */ "./src/app/services/category.service.ts");
+/* harmony import */ var _services_races_service__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./services/races.service */ "./src/app/services/races.service.ts");
+/* harmony import */ var _services_race_service__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./services/race.service */ "./src/app/services/race.service.ts");
+/* harmony import */ var _services_raceevents_service__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./services/raceevents.service */ "./src/app/services/raceevents.service.ts");
+/* harmony import */ var _services_raceevent_service__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./services/raceevent.service */ "./src/app/services/raceevent.service.ts");
+/* harmony import */ var _services_results_service__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./services/results.service */ "./src/app/services/results.service.ts");
+/* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./services/user-groups.service */ "./src/app/services/user-groups.service.ts");
+/* harmony import */ var _services_user_group_service__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./services/user-group.service */ "./src/app/services/user-group.service.ts");
+/* harmony import */ var _services_log_service__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./services/log.service */ "./src/app/services/log.service.ts");
+/* harmony import */ var _services_log_item_service__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./services/log-item.service */ "./src/app/services/log-item.service.ts");
+/* harmony import */ var _services_trash_service__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./services/trash.service */ "./src/app/services/trash.service.ts");
+/* harmony import */ var _services_state_service__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./services/state.service */ "./src/app/services/state.service.ts");
+/* harmony import */ var _services_appevents_service__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./services/appevents.service */ "./src/app/services/appevents.service.ts");
+/* harmony import */ var _services_reference_service__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./services/reference.service */ "./src/app/services/reference.service.ts");
+/* harmony import */ var _services_settings_service__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./services/settings.service */ "./src/app/services/settings.service.ts");
+/* harmony import */ var _services_accounts_service__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./services/accounts.service */ "./src/app/services/accounts.service.ts");
+/* harmony import */ var _services_account_service__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
+/* harmony import */ var _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./components/sign-in/sign-in.component */ "./src/app/components/sign-in/sign-in.component.ts");
+/* harmony import */ var _components_home_home_component__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./components/home/home.component */ "./src/app/components/home/home.component.ts");
+/* harmony import */ var _components_header_header_component__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./components/header/header.component */ "./src/app/components/header/header.component.ts");
+/* harmony import */ var _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./components/common/items-controls/items-controls.component */ "./src/app/components/common/items-controls/items-controls.component.ts");
+/* harmony import */ var _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./components/common/items-table/items-table.component */ "./src/app/components/common/items-table/items-table.component.ts");
+/* harmony import */ var _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./components/common/items-paginator/items-paginator.component */ "./src/app/components/common/items-paginator/items-paginator.component.ts");
+/* harmony import */ var _components_users_users_component__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./components/users/users.component */ "./src/app/components/users/users.component.ts");
+/* harmony import */ var _components_user_user_component__WEBPACK_IMPORTED_MODULE_55__ = __webpack_require__(/*! ./components/user/user.component */ "./src/app/components/user/user.component.ts");
+/* harmony import */ var _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_56__ = __webpack_require__(/*! ./components/common/search-select/search-select.component */ "./src/app/components/common/search-select/search-select.component.ts");
+/* harmony import */ var _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_57__ = __webpack_require__(/*! ./components/common/multi-select/multi-select.component */ "./src/app/components/common/multi-select/multi-select.component.ts");
+/* harmony import */ var _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_58__ = __webpack_require__(/*! ./components/competitors/competitors.component */ "./src/app/components/competitors/competitors.component.ts");
+/* harmony import */ var _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_59__ = __webpack_require__(/*! ./components/competitor/competitor.component */ "./src/app/components/competitor/competitor.component.ts");
+/* harmony import */ var _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_60__ = __webpack_require__(/*! ./components/categories/categories.component */ "./src/app/components/categories/categories.component.ts");
+/* harmony import */ var _components_category_category_component__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./components/category/category.component */ "./src/app/components/category/category.component.ts");
+/* harmony import */ var _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./components/common/input-tree/input-tree.component */ "./src/app/components/common/input-tree/input-tree.component.ts");
+/* harmony import */ var _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./components/nav-appevts-log/nav-appevts-log.component */ "./src/app/components/nav-appevts-log/nav-appevts-log.component.ts");
+/* harmony import */ var _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./components/common/items-import/items-import.component */ "./src/app/components/common/items-import/items-import.component.ts");
+/* harmony import */ var _components_races_races_component__WEBPACK_IMPORTED_MODULE_65__ = __webpack_require__(/*! ./components/races/races.component */ "./src/app/components/races/races.component.ts");
+/* harmony import */ var _components_race_race_component__WEBPACK_IMPORTED_MODULE_66__ = __webpack_require__(/*! ./components/race/race.component */ "./src/app/components/race/race.component.ts");
+/* harmony import */ var _components_go_go_component__WEBPACK_IMPORTED_MODULE_67__ = __webpack_require__(/*! ./components/go/go.component */ "./src/app/components/go/go.component.ts");
+/* harmony import */ var _components_results_results_component__WEBPACK_IMPORTED_MODULE_68__ = __webpack_require__(/*! ./components/results/results.component */ "./src/app/components/results/results.component.ts");
+/* harmony import */ var _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_69__ = __webpack_require__(/*! ./components/nav-trash/nav-trash.component */ "./src/app/components/nav-trash/nav-trash.component.ts");
+
 
 
 
@@ -511,33 +513,34 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
             declarations: [
                 _components_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"],
-                _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_47__["SignInComponent"],
-                _components_home_home_component__WEBPACK_IMPORTED_MODULE_48__["HomeComponent"],
-                _components_header_header_component__WEBPACK_IMPORTED_MODULE_49__["HeaderComponent"],
-                _components_users_users_component__WEBPACK_IMPORTED_MODULE_53__["UsersComponent"],
-                _components_user_user_component__WEBPACK_IMPORTED_MODULE_54__["UserComponent"],
+                _components_sign_in_sign_in_component__WEBPACK_IMPORTED_MODULE_48__["SignInComponent"],
+                _components_home_home_component__WEBPACK_IMPORTED_MODULE_49__["HomeComponent"],
+                _components_header_header_component__WEBPACK_IMPORTED_MODULE_50__["HeaderComponent"],
+                _components_users_users_component__WEBPACK_IMPORTED_MODULE_54__["UsersComponent"],
+                _components_user_user_component__WEBPACK_IMPORTED_MODULE_55__["UserComponent"],
                 _pipes_my_filter_pipe__WEBPACK_IMPORTED_MODULE_18__["MyFilterPipe"],
                 _pipes_keys_pipe__WEBPACK_IMPORTED_MODULE_19__["KeysPipe"],
                 _pipes_in_list_filter_pipe__WEBPACK_IMPORTED_MODULE_21__["InListFilterPipe"],
-                _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_55__["SearchSelectComponent"],
-                _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_56__["MultiSelectComponent"],
+                _components_common_search_select_search_select_component__WEBPACK_IMPORTED_MODULE_56__["SearchSelectComponent"],
+                _components_common_multi_select_multi_select_component__WEBPACK_IMPORTED_MODULE_57__["MultiSelectComponent"],
                 _pipes_as_result_pipe__WEBPACK_IMPORTED_MODULE_20__["AsResultPipe"],
-                _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_57__["CompetitorsComponent"],
-                _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_58__["CompetitorComponent"],
-                _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_59__["CategoriesComponent"],
-                _components_category_category_component__WEBPACK_IMPORTED_MODULE_60__["CategoryComponent"],
-                _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_61__["InputTreeComponent"],
+                _components_competitors_competitors_component__WEBPACK_IMPORTED_MODULE_58__["CompetitorsComponent"],
+                _components_competitor_competitor_component__WEBPACK_IMPORTED_MODULE_59__["CompetitorComponent"],
+                _components_categories_categories_component__WEBPACK_IMPORTED_MODULE_60__["CategoriesComponent"],
+                _components_category_category_component__WEBPACK_IMPORTED_MODULE_61__["CategoryComponent"],
+                _components_common_input_tree_input_tree_component__WEBPACK_IMPORTED_MODULE_62__["InputTreeComponent"],
                 _pipes_order_by_pipe__WEBPACK_IMPORTED_MODULE_22__["OrderByPipe"],
-                _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_68__["NavTrashComponent"],
-                _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_50__["ItemsControlsComponent"],
-                _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_51__["ItemsTableComponent"],
-                _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_52__["ItemsPaginatorComponent"],
-                _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_62__["NavAPPEvtsLogComponent"],
-                _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_63__["ItemsImportComponent"],
-                _components_races_races_component__WEBPACK_IMPORTED_MODULE_64__["RacesComponent"],
-                _components_race_race_component__WEBPACK_IMPORTED_MODULE_65__["RaceComponent"],
-                _components_go_go_component__WEBPACK_IMPORTED_MODULE_66__["GoComponent"],
-                _components_results_results_component__WEBPACK_IMPORTED_MODULE_67__["ResultsComponent"],
+                _pipes_order_by_select_value_pipe__WEBPACK_IMPORTED_MODULE_23__["OrderBySelectValue"],
+                _components_nav_trash_nav_trash_component__WEBPACK_IMPORTED_MODULE_69__["NavTrashComponent"],
+                _components_common_items_controls_items_controls_component__WEBPACK_IMPORTED_MODULE_51__["ItemsControlsComponent"],
+                _components_common_items_table_items_table_component__WEBPACK_IMPORTED_MODULE_52__["ItemsTableComponent"],
+                _components_common_items_paginator_items_paginator_component__WEBPACK_IMPORTED_MODULE_53__["ItemsPaginatorComponent"],
+                _components_nav_appevts_log_nav_appevts_log_component__WEBPACK_IMPORTED_MODULE_63__["NavAPPEvtsLogComponent"],
+                _components_common_items_import_items_import_component__WEBPACK_IMPORTED_MODULE_64__["ItemsImportComponent"],
+                _components_races_races_component__WEBPACK_IMPORTED_MODULE_65__["RacesComponent"],
+                _components_race_race_component__WEBPACK_IMPORTED_MODULE_66__["RaceComponent"],
+                _components_go_go_component__WEBPACK_IMPORTED_MODULE_67__["GoComponent"],
+                _components_results_results_component__WEBPACK_IMPORTED_MODULE_68__["ResultsComponent"],
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -562,30 +565,30 @@ var AppModule = /** @class */ (function () {
                 _services_core_service__WEBPACK_IMPORTED_MODULE_15__["CoreService"],
                 _services_lstorage_service__WEBPACK_IMPORTED_MODULE_16__["LStorageService"],
                 _services_api_service__WEBPACK_IMPORTED_MODULE_17__["APIService"],
-                _services_item_service__WEBPACK_IMPORTED_MODULE_23__["ItemService"],
-                _services_user_service__WEBPACK_IMPORTED_MODULE_26__["UserService"],
-                _services_user_groups_service__WEBPACK_IMPORTED_MODULE_36__["UserGroupsService"],
-                _services_items_service__WEBPACK_IMPORTED_MODULE_24__["ItemsService"],
-                _services_users_service__WEBPACK_IMPORTED_MODULE_25__["UsersService"],
-                _services_competitors_service__WEBPACK_IMPORTED_MODULE_27__["CompetitorsService"],
-                _services_competitor_service__WEBPACK_IMPORTED_MODULE_28__["CompetitorService"],
-                _services_categories_service__WEBPACK_IMPORTED_MODULE_29__["CategoriesService"],
-                _services_category_service__WEBPACK_IMPORTED_MODULE_30__["CategoryService"],
-                _services_races_service__WEBPACK_IMPORTED_MODULE_31__["RacesService"],
-                _services_race_service__WEBPACK_IMPORTED_MODULE_32__["RaceService"],
-                _services_events_service__WEBPACK_IMPORTED_MODULE_33__["EventsService"],
-                _services_event_service__WEBPACK_IMPORTED_MODULE_34__["EventService"],
-                _services_results_service__WEBPACK_IMPORTED_MODULE_35__["ResultsService"],
-                _services_user_group_service__WEBPACK_IMPORTED_MODULE_37__["UserGroupService"],
-                _services_log_service__WEBPACK_IMPORTED_MODULE_38__["LogService"],
-                _services_log_item_service__WEBPACK_IMPORTED_MODULE_39__["LogItemService"],
-                _services_trash_service__WEBPACK_IMPORTED_MODULE_40__["TrashService"],
-                _services_state_service__WEBPACK_IMPORTED_MODULE_41__["StateService"],
-                _services_appevents_service__WEBPACK_IMPORTED_MODULE_42__["APPEventsService"],
-                _services_reference_service__WEBPACK_IMPORTED_MODULE_43__["ReferenceService"],
-                _services_settings_service__WEBPACK_IMPORTED_MODULE_44__["SettingsService"],
-                _services_accounts_service__WEBPACK_IMPORTED_MODULE_45__["AccountsService"],
-                _services_account_service__WEBPACK_IMPORTED_MODULE_46__["AccountService"],
+                _services_item_service__WEBPACK_IMPORTED_MODULE_24__["ItemService"],
+                _services_user_service__WEBPACK_IMPORTED_MODULE_27__["UserService"],
+                _services_user_groups_service__WEBPACK_IMPORTED_MODULE_37__["UserGroupsService"],
+                _services_items_service__WEBPACK_IMPORTED_MODULE_25__["ItemsService"],
+                _services_users_service__WEBPACK_IMPORTED_MODULE_26__["UsersService"],
+                _services_competitors_service__WEBPACK_IMPORTED_MODULE_28__["CompetitorsService"],
+                _services_competitor_service__WEBPACK_IMPORTED_MODULE_29__["CompetitorService"],
+                _services_categories_service__WEBPACK_IMPORTED_MODULE_30__["CategoriesService"],
+                _services_category_service__WEBPACK_IMPORTED_MODULE_31__["CategoryService"],
+                _services_races_service__WEBPACK_IMPORTED_MODULE_32__["RacesService"],
+                _services_race_service__WEBPACK_IMPORTED_MODULE_33__["RaceService"],
+                _services_raceevents_service__WEBPACK_IMPORTED_MODULE_34__["RaceEventsService"],
+                _services_raceevent_service__WEBPACK_IMPORTED_MODULE_35__["RaceEventService"],
+                _services_results_service__WEBPACK_IMPORTED_MODULE_36__["ResultsService"],
+                _services_user_group_service__WEBPACK_IMPORTED_MODULE_38__["UserGroupService"],
+                _services_log_service__WEBPACK_IMPORTED_MODULE_39__["LogService"],
+                _services_log_item_service__WEBPACK_IMPORTED_MODULE_40__["LogItemService"],
+                _services_trash_service__WEBPACK_IMPORTED_MODULE_41__["TrashService"],
+                _services_state_service__WEBPACK_IMPORTED_MODULE_42__["StateService"],
+                _services_appevents_service__WEBPACK_IMPORTED_MODULE_43__["APPEventsService"],
+                _services_reference_service__WEBPACK_IMPORTED_MODULE_44__["ReferenceService"],
+                _services_settings_service__WEBPACK_IMPORTED_MODULE_45__["SettingsService"],
+                _services_accounts_service__WEBPACK_IMPORTED_MODULE_46__["AccountsService"],
+                _services_account_service__WEBPACK_IMPORTED_MODULE_47__["AccountService"],
             ],
             bootstrap: [_components_app_component__WEBPACK_IMPORTED_MODULE_7__["AppComponent"]]
         })
@@ -1903,7 +1906,7 @@ var CompetitorsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".reg {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  margin: 2px;\n  border-radius: 5px;\n  background: rgba(7, 151, 223, 0.2);\n}\n.reg.start {\n  background: rgba(66, 179, 9, 0.41);\n}\n.reg.finish {\n  background: rgba(255, 140, 0, 0.38);\n}\n.clickable {\n  cursor: pointer;\n}\n.clickable:hover {\n  background: rgba(0, 20, 30, 0.1);\n}\n.scrolled {\n  overflow-y: auto;\n  max-height: 500px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9nby9EOlxcT1NQYW5lbFxcZG9tYWluc1xcbWZ0aW1pbmdcXGZyb250ZW5kL3NyY1xcYXBwXFxjb21wb25lbnRzXFxnb1xcZ28uY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvZ28vZ28uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQ0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtFQUNBLGtDQUFBO0FDQ0Y7QURBRTtFQUNFLGtDQUFBO0FDRUo7QURBRTtFQUNFLG1DQUFBO0FDRUo7QURFQTtFQUNFLGVBQUE7QUNDRjtBREFFO0VBQ0UsZ0NBQUE7QUNFSjtBREVBO0VBQ0UsZ0JBQUE7RUFDQSxpQkFBQTtBQ0NGIiwiZmlsZSI6InNyYy9hcHAvY29tcG9uZW50cy9nby9nby5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5yZWd7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgcmdiYSgwLDAsMCwuMSk7XHJcbiAgbWFyZ2luOiAycHg7XHJcbiAgYm9yZGVyLXJhZGl1czogNXB4O1xyXG4gIGJhY2tncm91bmQ6IGhzbCgyMDBkZWcsIDk0JSwgNDUlICwgMjAlKTtcclxuICAmLnN0YXJ0e1xyXG4gICAgYmFja2dyb3VuZDogaHNsKDEwMGRlZywgOTAlLCAzNyUsIDQxJSk7XHJcbiAgfVxyXG4gICYuZmluaXNoe1xyXG4gICAgYmFja2dyb3VuZDogaHNsKDMzZGVnICwxMDAlLCA1MCUgLCAzOCUpXHJcbiAgfVxyXG59XHJcblxyXG4uY2xpY2thYmxle1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICAmOmhvdmVye1xyXG4gICAgYmFja2dyb3VuZDogcmdiYSgwLDIwLDMwLC4xKVxyXG4gIH1cclxufVxyXG5cclxuLnNjcm9sbGVke1xyXG4gIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgbWF4LWhlaWdodDogNTAwcHg7ICBcclxufSIsIi5yZWcge1xuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gIG1hcmdpbjogMnB4O1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGJhY2tncm91bmQ6IHJnYmEoNywgMTUxLCAyMjMsIDAuMik7XG59XG4ucmVnLnN0YXJ0IHtcbiAgYmFja2dyb3VuZDogcmdiYSg2NiwgMTc5LCA5LCAwLjQxKTtcbn1cbi5yZWcuZmluaXNoIHtcbiAgYmFja2dyb3VuZDogcmdiYSgyNTUsIDE0MCwgMCwgMC4zOCk7XG59XG5cbi5jbGlja2FibGUge1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG4uY2xpY2thYmxlOmhvdmVyIHtcbiAgYmFja2dyb3VuZDogcmdiYSgwLCAyMCwgMzAsIDAuMSk7XG59XG5cbi5zY3JvbGxlZCB7XG4gIG92ZXJmbG93LXk6IGF1dG87XG4gIG1heC1oZWlnaHQ6IDUwMHB4O1xufSJdfQ== */"
+module.exports = ".reg {\n  border: 1px solid rgba(0, 0, 0, 0.1);\n  margin: 2px;\n  border-radius: 5px;\n  background: white;\n}\n.reg.start {\n  background: #96ca7d;\n}\n.reg.start .silver {\n  color: white;\n}\n.reg.finish {\n  background: #f7bc73;\n}\n.reg.finish .silver {\n  color: white;\n}\n.clickable {\n  cursor: pointer;\n}\n.clickable:hover {\n  background: rgba(0, 20, 30, 0.1);\n}\n.scrolled {\n  overflow-y: auto;\n  max-height: 200px;\n}\n#scrolledTarget {\n  overflow-y: auto;\n  max-height: 200px;\n  background: #e5e6e6;\n}\n.scroll-bg {\n  background-image: url(/assets/images/ring.svg);\n  background-position: center;\n  background-repeat: repeat-y;\n  background-size: 30px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvY29tcG9uZW50cy9nby9EOlxcT1NQYW5lbFxcZG9tYWluc1xcbWZ0aW1pbmdcXGZyb250ZW5kL3NyY1xcYXBwXFxjb21wb25lbnRzXFxnb1xcZ28uY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvZ28vZ28uY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQ0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtFQUNBLGlCQUFBO0FDQ0Y7QURBRTtFQUNFLG1CQUFBO0FDRUo7QURESTtFQUNFLFlBQUE7QUNHTjtBREFFO0VBQ0UsbUJBQUE7QUNFSjtBRERJO0VBQ0UsWUFBQTtBQ0dOO0FERUE7RUFDRSxlQUFBO0FDQ0Y7QURBRTtFQUNFLGdDQUFBO0FDRUo7QURFQTtFQUNFLGdCQUFBO0VBQ0EsaUJBQUE7QUNDRjtBREVBO0VBQ0UsZ0JBQUE7RUFDQSxpQkFBQTtFQUNBLG1CQUFBO0FDQ0Y7QURDQTtFQUNFLDhDQUFBO0VBQ0EsMkJBQUE7RUFDQSwyQkFBQTtFQUNBLHFCQUFBO0FDRUYiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2dvL2dvLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnJlZ3tcclxuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDAsMCwwLC4xKTtcclxuICBtYXJnaW46IDJweDtcclxuICBib3JkZXItcmFkaXVzOiA1cHg7XHJcbiAgYmFja2dyb3VuZDogaHNsKDIwMGRlZywgMCUsIDEwMCUgLCAxMDAlKTtcclxuICAmLnN0YXJ0e1xyXG4gICAgYmFja2dyb3VuZDogaHNsKDEwMGRlZyA0MiUgNjQlKTtcclxuICAgIC5zaWx2ZXJ7XHJcbiAgICAgIGNvbG9yOiB3aGl0ZTtcclxuICAgIH1cclxuICB9XHJcbiAgJi5maW5pc2h7XHJcbiAgICBiYWNrZ3JvdW5kOiBoc2woMzNkZWcgODklIDcxJSk7XHJcbiAgICAuc2lsdmVye1xyXG4gICAgICBjb2xvcjogd2hpdGU7XHJcbiAgICB9XHJcbiAgfVxyXG59XHJcblxyXG4uY2xpY2thYmxle1xyXG4gIGN1cnNvcjogcG9pbnRlcjtcclxuICAmOmhvdmVye1xyXG4gICAgYmFja2dyb3VuZDogcmdiYSgwLDIwLDMwLC4xKVxyXG4gIH1cclxufVxyXG5cclxuLnNjcm9sbGVke1xyXG4gIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgbWF4LWhlaWdodDogMjAwcHg7ICBcclxufVxyXG5cclxuI3Njcm9sbGVkVGFyZ2V0e1xyXG4gIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgbWF4LWhlaWdodDogMjAwcHg7ICBcclxuICBiYWNrZ3JvdW5kOiBoc2xhKDIwMGRlZywgMyUsIDkwJSAsIDEwMCUpO1xyXG59XHJcbi5zY3JvbGwtYmd7XHJcbiAgYmFja2dyb3VuZC1pbWFnZTogdXJsKC9hc3NldHMvaW1hZ2VzL3Jpbmcuc3ZnKTtcclxuICBiYWNrZ3JvdW5kLXBvc2l0aW9uOiBjZW50ZXI7XHJcbiAgYmFja2dyb3VuZC1yZXBlYXQ6IHJlcGVhdC15O1xyXG4gIGJhY2tncm91bmQtc2l6ZTogMzBweDtcclxufSIsIi5yZWcge1xuICBib3JkZXI6IDFweCBzb2xpZCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gIG1hcmdpbjogMnB4O1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIGJhY2tncm91bmQ6IHdoaXRlO1xufVxuLnJlZy5zdGFydCB7XG4gIGJhY2tncm91bmQ6ICM5NmNhN2Q7XG59XG4ucmVnLnN0YXJ0IC5zaWx2ZXIge1xuICBjb2xvcjogd2hpdGU7XG59XG4ucmVnLmZpbmlzaCB7XG4gIGJhY2tncm91bmQ6ICNmN2JjNzM7XG59XG4ucmVnLmZpbmlzaCAuc2lsdmVyIHtcbiAgY29sb3I6IHdoaXRlO1xufVxuXG4uY2xpY2thYmxlIHtcbiAgY3Vyc29yOiBwb2ludGVyO1xufVxuLmNsaWNrYWJsZTpob3ZlciB7XG4gIGJhY2tncm91bmQ6IHJnYmEoMCwgMjAsIDMwLCAwLjEpO1xufVxuXG4uc2Nyb2xsZWQge1xuICBvdmVyZmxvdy15OiBhdXRvO1xuICBtYXgtaGVpZ2h0OiAyMDBweDtcbn1cblxuI3Njcm9sbGVkVGFyZ2V0IHtcbiAgb3ZlcmZsb3cteTogYXV0bztcbiAgbWF4LWhlaWdodDogMjAwcHg7XG4gIGJhY2tncm91bmQ6ICNlNWU2ZTY7XG59XG5cbi5zY3JvbGwtYmcge1xuICBiYWNrZ3JvdW5kLWltYWdlOiB1cmwoL2Fzc2V0cy9pbWFnZXMvcmluZy5zdmcpO1xuICBiYWNrZ3JvdW5kLXBvc2l0aW9uOiBjZW50ZXI7XG4gIGJhY2tncm91bmQtcmVwZWF0OiByZXBlYXQteTtcbiAgYmFja2dyb3VuZC1zaXplOiAzMHB4O1xufSJdfQ== */"
 
 /***/ }),
 
@@ -1943,8 +1946,23 @@ var GoComponent = /** @class */ (function () {
         };
         this.faBan = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faBan"];
         this.faSave = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faSave"];
+        this.faTimes = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faTimes"];
+        this.faTrashAlt = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faTrashAlt"];
+        this.faEdit = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_5__["faEdit"];
         this.result = { items: [] };
         this.editEventFilterresult = { items: [] };
+        this.createNewEvent = function () {
+            _this.newEvent = {
+                accountId: 0,
+                eventType: 1,
+                raceId: _this.app.go.race.id,
+                competitorId: 0,
+                t: 0,
+                desc: '',
+                d: 0,
+                categoryIds: [],
+            };
+        };
         this.delayH = function (item, items, i) {
             if (!_this.s.eventsTimeScale)
                 return '';
@@ -1962,14 +1980,20 @@ var GoComponent = /** @class */ (function () {
             return '';
         };
         this.onFormSubmit = function (eventType, competitorId) {
+            if (competitorId === void 0) { competitorId = 0; }
             _this.newEvent.eventType = eventType;
             _this.newEvent.competitorId = competitorId;
             _this.newEvent.t = 1 * _this.app.go.t;
-            _this.app.events.add(_this.newEvent)
+            if (!competitorId && _this.s.filter.competitorName) {
+                _this.newEvent.desc += ' [' + _this.s.filter.competitorName + ']';
+            }
+            _this.app.raceevents.add(_this.newEvent)
                 .subscribe(function (res) {
-                _this.app.events.get()
+                _this.app.raceevents.get()
                     .subscribe(function () {
                     _this.app.go.get();
+                    _this.createNewEvent();
+                    _this.s.filter.competitorName = '';
                 });
             });
         };
@@ -1981,29 +2005,21 @@ var GoComponent = /** @class */ (function () {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function () { return _this.route.params; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (params) {
             if (params['raceId']) {
                 _this.app.go.race = _this.app.races._index.id[params['raceId']];
-                _this.newEvent = {
-                    accountId: 0,
-                    eventType: 1,
-                    raceId: _this.app.go.race.id,
-                    competitorId: 0,
-                    t: 0,
-                    desc: '',
-                    d: 0,
-                    categoryIds: [],
-                };
+                _this.createNewEvent();
                 _this.app.go.get();
-                // const iid = setInterval(()=>{
-                //   const elem = document.getElementById('recontainer');
-                //   if(elem) {
-                //     const resizeObserver = new ResizeObserver((e:any) => {
-                //       // console.log(e[0].target.offsetHeight)
-                //       console.log(elem.offsetHeight)
-                //     }); 
-                //     resizeObserver.observe(elem);
-                //     window.clearInterval(iid);
-                //     return;
-                //   }
-                // },100)
+                var iid_1 = setInterval(function () {
+                    //const elem = document.getElementById('scroledCnt');
+                    var elem = document.body;
+                    var targetElem = document.getElementById('scrolledTarget');
+                    if (elem) {
+                        var resizeObserver = new window.ResizeObserver(function (e) {
+                            targetElem.style.maxHeight = (elem.clientHeight - 140) + 'px';
+                        });
+                        resizeObserver.observe(elem);
+                        window.clearInterval(iid_1);
+                        return;
+                    }
+                }, 100);
             }
             else {
                 _this.app.go.reset();
@@ -2018,17 +2034,25 @@ var GoComponent = /** @class */ (function () {
     GoComponent.prototype.setEditCopetitorId = function (item) {
         item.competitorId = this.editEventFilterresult.items[0] ? this.editEventFilterresult.items[0].id : 0;
     };
-    GoComponent.prototype.switchEditEventForm = function (item) {
+    GoComponent.prototype.switchEditEventForm = function (item, save) {
         var _this = this;
+        if (save === void 0) { save = false; }
         if (this.editEventId !== item.id) {
             this.editEventId = item.id;
         }
         else {
-            item.save()
-                .subscribe(function () {
-                _this.editEventId = 0;
-                _this.app.go.get();
-            });
+            if (save) {
+                item.save()
+                    .subscribe(function () {
+                    _this.editEventId = 0;
+                    _this.app.go.get();
+                });
+            }
+            else {
+                this.editEventId = 0;
+                this.app.raceevents.get(item.id)
+                    .subscribe(function () { return _this.app.go.get(); });
+            }
         }
     };
     GoComponent.prototype.saveEvent = function (item) {
@@ -2037,6 +2061,15 @@ var GoComponent = /** @class */ (function () {
             .subscribe(function () {
             _this.editEventId = 0;
             _this.app.go.get();
+        });
+    };
+    GoComponent.prototype.delEvent = function (item) {
+        var _this = this;
+        item.del()
+            .subscribe(function () {
+            _this.app.raceevents.get().subscribe(function () {
+                _this.app.go.get();
+            });
         });
     };
     GoComponent.ctorParameters = function () { return [
@@ -2524,6 +2557,7 @@ var ResultsComponent = /** @class */ (function () {
         this.route = route;
         this.app = app;
         this.router = router;
+        this.res = 0;
     }
     ResultsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -2881,7 +2915,7 @@ var migrationFactory = function () {
             store.createIndex('root', 'root', { unique: false });
         },
         10: function (db, transaction) {
-            var store = transaction.objectStore('events');
+            var store = transaction.objectStore('raceevents');
             store.createIndex('categoryIds', 'categoryIds', { unique: false });
         },
         11: function (db, transaction) {
@@ -2967,7 +3001,7 @@ function myDBConfig() {
                 ]
             },
             {
-                store: 'events',
+                store: 'raceevents',
                 storeConfig: { keyPath: 'id', autoIncrement: true },
                 storeSchema: [
                     { name: 'accountId', keypath: 'accountId', options: { unique: false } },
@@ -3178,6 +3212,39 @@ var MyFilterPipe = /** @class */ (function () {
         })
     ], MyFilterPipe);
     return MyFilterPipe;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pipes/order-by-select_value.pipe.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/pipes/order-by-select_value.pipe.ts ***!
+  \*****************************************************/
+/*! exports provided: OrderBySelectValue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrderBySelectValue", function() { return OrderBySelectValue; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+
+
+var OrderBySelectValue = /** @class */ (function () {
+    function OrderBySelectValue() {
+    }
+    OrderBySelectValue.prototype.transform = function (obj, currentField, value) {
+        obj.sort(function (a, b) { return (a[currentField] === value ? -1 : 1); });
+        return obj;
+    };
+    OrderBySelectValue = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Pipe"])({
+            name: 'orderBySelectValue'
+        })
+    ], OrderBySelectValue);
+    return OrderBySelectValue;
 }());
 
 
@@ -3432,7 +3499,7 @@ var APIService = /** @class */ (function () {
                 }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["delay"])(1000));
             }
         }
-        else if (svc === 'users' || svc === 'log' || svc === 'competitors' || svc === 'categories' || svc === 'races' || svc === 'events') {
+        else if (svc === 'users' || svc === 'log' || svc === 'competitors' || svc === 'categories' || svc === 'races' || svc === 'raceevents') {
             if (type === 'GET') {
                 if (!getParams[0]) {
                     return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["from"])(this.dbService.getAll(svc))
@@ -3532,7 +3599,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_categories_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../services/categories.service */ "./src/app/services/categories.service.ts");
 /* harmony import */ var _services_races_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../services/races.service */ "./src/app/services/races.service.ts");
 /* harmony import */ var _services_go_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/go.service */ "./src/app/services/go.service.ts");
-/* harmony import */ var _services_events_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../services/events.service */ "./src/app/services/events.service.ts");
+/* harmony import */ var _services_raceevents_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../services/raceevents.service */ "./src/app/services/raceevents.service.ts");
 /* harmony import */ var _services_results_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../services/results.service */ "./src/app/services/results.service.ts");
 /* harmony import */ var _services_users_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../services/users.service */ "./src/app/services/users.service.ts");
 /* harmony import */ var _services_user_groups_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../services/user-groups.service */ "./src/app/services/user-groups.service.ts");
@@ -3565,7 +3632,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AppService = /** @class */ (function () {
-    function AppService(core, trash, settings, ref, APPEvents, state, users, categories, competitors, races, events, go, results, log, accounts, seasons, ugroups) {
+    function AppService(core, trash, settings, ref, APPEvents, state, users, categories, competitors, races, raceevents, go, results, log, accounts, seasons, ugroups) {
         this.core = core;
         this.trash = trash;
         this.settings = settings;
@@ -3576,7 +3643,7 @@ var AppService = /** @class */ (function () {
         this.categories = categories;
         this.competitors = competitors;
         this.races = races;
-        this.events = events;
+        this.raceevents = raceevents;
         this.go = go;
         this.results = results;
         this.log = log;
@@ -3591,7 +3658,7 @@ var AppService = /** @class */ (function () {
             competitors: 'competitor',
             categories: 'category',
             races: 'race',
-            events: 'event',
+            raceevents: 'raceevent',
             ugroups: 'user-group',
             recievers: 'reciever',
             accounts: 'account',
@@ -3602,12 +3669,12 @@ var AppService = /** @class */ (function () {
         this.competitors.app = this;
         this.categories.app = this;
         this.races.app = this;
-        this.events.app = this;
+        this.raceevents.app = this;
         this.log.app = this;
         this.trash.app = this;
         this.accounts.app = this;
-        this.trash.trashTypes = ['competitors', 'categories', 'races', 'events', 'users', 'ugroups'];
-        this.state.createDefaults(['competitors', 'categories', 'races', 'events', 'users', 'ugroups', 'log', 'trash', 'accounts']);
+        this.trash.trashTypes = ['competitors', 'categories', 'races', 'raceevents', 'users', 'ugroups'];
+        this.state.createDefaults(['competitors', 'categories', 'races', 'raceevents', 'users', 'ugroups', 'log', 'trash', 'accounts']);
         this.go.app = this;
         this.results.app = this;
     }
@@ -3630,7 +3697,7 @@ var AppService = /** @class */ (function () {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) {
             _this.settings.set(_this.core.settings);
             _this.ref.set(_this.core.ref);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { _this.ready = false; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { _this.core.createRightsAliases([_this.users, _this.log, _this.competitors, _this.categories, _this.races, _this.events]); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.users.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.ugroups.get().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.competitors.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.categories.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.races.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.events.get(); })); }), 
+        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { _this.ready = false; }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { _this.core.createRightsAliases([_this.users, _this.log, _this.competitors, _this.categories, _this.races, _this.raceevents]); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.users.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.ugroups.get().pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.competitors.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.categories.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.races.get(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["switchMap"])(function (_) { return _this.raceevents.get(); })); }), 
         //tap(_=>{this.rtqueue.get().subscribe()}),
         Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { _this.APPEvents.startAutoRefresh().subscribe(); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["tap"])(function (_) { if (_this.core.user.super)
             _this.accounts.get().subscribe(function (_) { document.dispatchEvent(_this.accountsReadyEvent); }); }))
@@ -3650,7 +3717,7 @@ var AppService = /** @class */ (function () {
         { type: _services_categories_service__WEBPACK_IMPORTED_MODULE_6__["CategoriesService"] },
         { type: _services_competitors_service__WEBPACK_IMPORTED_MODULE_5__["CompetitorsService"] },
         { type: _services_races_service__WEBPACK_IMPORTED_MODULE_7__["RacesService"] },
-        { type: _services_events_service__WEBPACK_IMPORTED_MODULE_9__["EventsService"] },
+        { type: _services_raceevents_service__WEBPACK_IMPORTED_MODULE_9__["RaceEventsService"] },
         { type: _services_go_service__WEBPACK_IMPORTED_MODULE_8__["GoService"] },
         { type: _services_results_service__WEBPACK_IMPORTED_MODULE_10__["ResultsService"] },
         { type: _services_log_service__WEBPACK_IMPORTED_MODULE_13__["LogService"] },
@@ -4095,152 +4162,6 @@ var CoreService = /** @class */ (function () {
 
 /***/ }),
 
-/***/ "./src/app/services/event.service.ts":
-/*!*******************************************!*\
-  !*** ./src/app/services/event.service.ts ***!
-  \*******************************************/
-/*! exports provided: Event, EventService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Event", function() { return Event; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventService", function() { return EventService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_item_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/item.service */ "./src/app/services/item.service.ts");
-/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/api.service */ "./src/app/services/api.service.ts");
-
-
-
-
-var Event = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](Event, _super);
-    function Event(item_, _parent) {
-        var _this = _super.call(this, item_, _parent) || this;
-        _this._parent = _parent;
-        return _this;
-    }
-    Object.defineProperty(Event.prototype, "competitor", {
-        get: function () {
-            return (this.competitorId && this._parent.app && this._parent.app.competitors._index && this._parent.app.competitors._index.id && this._parent.app.competitors._index.id[this.competitorId]) ? this._parent.app.competitors._index.id[this.competitorId] : null;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Event.prototype, "competitorName", {
-        get: function () {
-            return this.competitor ? this.competitor.fullName : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Event.prototype, "competitorNum", {
-        get: function () {
-            return this.competitor ? this.competitor.num : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Event.prototype, "competitorNameNum", {
-        get: function () {
-            return this.competitor ? this.competitor.fullNameNum : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Event.prototype, "categoryName", {
-        get: function () {
-            return this.competitor ? this.competitor.categoryName : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Event.prototype, "categoryId", {
-        get: function () {
-            return this.competitor ? this.competitor.categoryId : '';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Event.ctorParameters = function () { return [
-        null,
-        null
-    ]; };
-    Event = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        })
-    ], Event);
-    return Event;
-}(_services_item_service__WEBPACK_IMPORTED_MODULE_2__["Item"]));
-
-var EventService = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](EventService, _super);
-    function EventService(api) {
-        var _this = _super.call(this, api) || this;
-        _this.api = api;
-        _this._itemType = 'events';
-        _this.eventTypes = ['', 'lap', 'start', 'finish'];
-        return _this;
-    }
-    EventService.prototype.create = function (item_, parent) {
-        return new Event(item_, parent);
-    };
-    EventService.ctorParameters = function () { return [
-        { type: _services_api_service__WEBPACK_IMPORTED_MODULE_3__["APIService"] }
-    ]; };
-    return EventService;
-}(_services_item_service__WEBPACK_IMPORTED_MODULE_2__["ItemService"]));
-
-
-
-/***/ }),
-
-/***/ "./src/app/services/events.service.ts":
-/*!********************************************!*\
-  !*** ./src/app/services/events.service.ts ***!
-  \********************************************/
-/*! exports provided: EventsService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EventsService", function() { return EventsService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_event_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/event.service */ "./src/app/services/event.service.ts");
-/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/api.service */ "./src/app/services/api.service.ts");
-/* harmony import */ var _services_items_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/items.service */ "./src/app/services/items.service.ts");
-
-
-
-
-
-var EventsService = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](EventsService, _super);
-    function EventsService(api, eventService) {
-        var _this = _super.call(this, api, eventService) || this;
-        _this.api = api;
-        _this.eventService = eventService;
-        return _this;
-    }
-    EventsService.ctorParameters = function () { return [
-        { type: _services_api_service__WEBPACK_IMPORTED_MODULE_3__["APIService"] },
-        { type: _services_event_service__WEBPACK_IMPORTED_MODULE_2__["EventService"] }
-    ]; };
-    EventsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        })
-    ], EventsService);
-    return EventsService;
-}(_services_items_service__WEBPACK_IMPORTED_MODULE_4__["ItemsService"]));
-
-
-
-/***/ }),
-
 /***/ "./src/app/services/go.service.ts":
 /*!****************************************!*\
   !*** ./src/app/services/go.service.ts ***!
@@ -4253,7 +4174,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GoService", function() { return GoService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _services_events_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/events.service */ "./src/app/services/events.service.ts");
+/* harmony import */ var _services_raceevents_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/raceevents.service */ "./src/app/services/raceevents.service.ts");
 
 
 
@@ -4302,23 +4223,26 @@ var GoService = /** @class */ (function () {
             if (item.eventType === 3) {
                 _this.finish = item;
             }
-            if (item.eventType === 1 && item.competitorId) {
-                if (!compLaps[item.competitorId])
-                    compLaps[item.competitorId] = 0;
-                compLaps[item.competitorId]++;
-                item._lap = compLaps[item.competitorId];
-                if (!compLapsT[item.competitorId] && _this.getStart(item.categoryId)) {
-                    item._lapT = item.t - _this.getStart(item.categoryId).t;
+            if (item.eventType === 1) {
+                if (item.competitorId) {
+                    if (!compLaps[item.competitorId])
+                        compLaps[item.competitorId] = 0;
+                    compLaps[item.competitorId]++;
+                    item._lap = compLaps[item.competitorId];
+                    if (!compLapsT[item.competitorId] && _this.getStart(item.categoryId)) {
+                        item._lapT = item.t - _this.getStart(item.categoryId).t;
+                    }
+                    else {
+                        item._lapT = item.t - compLapsT[item.competitorId];
+                    }
+                    compLapsT[item.competitorId] = item.t;
+                    if (item.competitor) {
+                        item.competitor._lastT = _this.t - item.t;
+                        item.competitor._lap = item._lap;
+                        item.competitor._t = item.t;
+                    }
                 }
-                else {
-                    item._lapT = item.t - compLapsT[item.competitorId];
-                }
-                compLapsT[item.competitorId] = item.t;
-                if (item.competitor) {
-                    item.competitor._lastT = _this.t - item.t;
-                    item.competitor._lap = item._lap;
-                    item.competitor._t = item.t;
-                }
+                item._raceT = item.t - _this.getStart(item.categoryId).t;
             }
         });
         this.raceEvents = this.raceEvents.sort(function (a, b) { return (b.t - a.t); });
@@ -4330,7 +4254,7 @@ var GoService = /** @class */ (function () {
         this.raceEvents = null;
     };
     GoService.ctorParameters = function () { return [
-        { type: _services_events_service__WEBPACK_IMPORTED_MODULE_2__["EventsService"] }
+        { type: _services_raceevents_service__WEBPACK_IMPORTED_MODULE_2__["RaceEventsService"] }
     ]; };
     GoService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -4880,6 +4804,190 @@ var RaceService = /** @class */ (function (_super) {
 
 /***/ }),
 
+/***/ "./src/app/services/raceevent.service.ts":
+/*!***********************************************!*\
+  !*** ./src/app/services/raceevent.service.ts ***!
+  \***********************************************/
+/*! exports provided: RaceEvent, RaceEventService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceEvent", function() { return RaceEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceEventService", function() { return RaceEventService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_item_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/item.service */ "./src/app/services/item.service.ts");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/api.service */ "./src/app/services/api.service.ts");
+
+
+
+
+var RaceEvent = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RaceEvent, _super);
+    function RaceEvent(item_, _parent) {
+        var _this = _super.call(this, item_, _parent) || this;
+        _this._parent = _parent;
+        return _this;
+    }
+    Object.defineProperty(RaceEvent.prototype, "competitor", {
+        get: function () {
+            return (this.competitorId && this._parent.app && this._parent.app.competitors._index && this._parent.app.competitors._index.id && this._parent.app.competitors._index.id[this.competitorId]) ? this._parent.app.competitors._index.id[this.competitorId] : null;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "competitorName", {
+        get: function () {
+            return this.competitor ? this.competitor.fullName : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "competitorNum", {
+        get: function () {
+            return this.competitor ? this.competitor.num : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "competitorNameNum", {
+        get: function () {
+            return this.competitor ? this.competitor.fullNameNum : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "categoryName", {
+        get: function () {
+            return this.competitor ? this.competitor.categoryName : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "categoryId", {
+        get: function () {
+            return this.competitor ? this.competitor.categoryId : '';
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "datetime", {
+        get: function () {
+            return (new Date(this.t + 4 * 3600000)).toISOString().slice(0, 23);
+        },
+        set: function (value) {
+            this.t = (new Date(value)).valueOf();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "raceTime", {
+        get: function () {
+            return this._parent && this._parent.app.go && this.categoryId ? (new Date(this.t - this._parent.app.go.getStart(this.categoryId).t)).toISOString().slice(11, 23) : '';
+        },
+        set: function (value) {
+            var s = new Date('1970-01-01T' + value + 'Z').getTime();
+            var newT = this._parent.app.go.getStart(this.categoryId).t + s;
+            if (!newT)
+                return;
+            this.t = newT;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RaceEvent.prototype, "raceTimeFirst", {
+        get: function () {
+            return this._parent && this._parent.app.go ? (new Date(this.t - this._parent.app.go.getStart().t)).toISOString().slice(11, 23) : '';
+        },
+        set: function (value) {
+            var s = new Date('1970-01-01T' + value + 'Z').getTime();
+            var newT = this._parent.app.go.getStart().t + s;
+            if (!newT)
+                return;
+            this.t = newT;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RaceEvent.ctorParameters = function () { return [
+        null,
+        null
+    ]; };
+    RaceEvent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        })
+    ], RaceEvent);
+    return RaceEvent;
+}(_services_item_service__WEBPACK_IMPORTED_MODULE_2__["Item"]));
+
+var RaceEventService = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RaceEventService, _super);
+    function RaceEventService(api) {
+        var _this = _super.call(this, api) || this;
+        _this.api = api;
+        _this._itemType = 'raceevents';
+        _this.eventTypes = ['', 'lap', 'start', 'finish'];
+        return _this;
+    }
+    RaceEventService.prototype.create = function (item_, parent) {
+        return new RaceEvent(item_, parent);
+    };
+    RaceEventService.ctorParameters = function () { return [
+        { type: _services_api_service__WEBPACK_IMPORTED_MODULE_3__["APIService"] }
+    ]; };
+    return RaceEventService;
+}(_services_item_service__WEBPACK_IMPORTED_MODULE_2__["ItemService"]));
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/raceevents.service.ts":
+/*!************************************************!*\
+  !*** ./src/app/services/raceevents.service.ts ***!
+  \************************************************/
+/*! exports provided: RaceEventsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceEventsService", function() { return RaceEventsService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_raceevent_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/raceevent.service */ "./src/app/services/raceevent.service.ts");
+/* harmony import */ var _services_api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/api.service */ "./src/app/services/api.service.ts");
+/* harmony import */ var _services_items_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/items.service */ "./src/app/services/items.service.ts");
+
+
+
+
+
+var RaceEventsService = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](RaceEventsService, _super);
+    function RaceEventsService(api, raceEventService) {
+        var _this = _super.call(this, api, raceEventService) || this;
+        _this.api = api;
+        _this.raceEventService = raceEventService;
+        return _this;
+    }
+    RaceEventsService.ctorParameters = function () { return [
+        { type: _services_api_service__WEBPACK_IMPORTED_MODULE_3__["APIService"] },
+        { type: _services_raceevent_service__WEBPACK_IMPORTED_MODULE_2__["RaceEventService"] }
+    ]; };
+    RaceEventsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+            providedIn: 'root'
+        })
+    ], RaceEventsService);
+    return RaceEventsService;
+}(_services_items_service__WEBPACK_IMPORTED_MODULE_4__["ItemsService"]));
+
+
+
+/***/ }),
+
 /***/ "./src/app/services/races.service.ts":
 /*!*******************************************!*\
   !*** ./src/app/services/races.service.ts ***!
@@ -4995,7 +5103,7 @@ var ResultsService = /** @class */ (function () {
         var _this = this;
         this.items2 = [];
         this.items = {};
-        this.raceEvents = this.app.events.items.filter(function (item) { return 1 * item.raceId === 1 * _this.race.id; }).sort(function (a, b) { return (a.t - b.t); });
+        this.raceEvents = this.app.raceevents.items.filter(function (item) { return 1 * item.raceId === 1 * _this.race.id; }).sort(function (a, b) { return (a.t - b.t); });
         var compLapsT = {};
         this.raceEvents.forEach(function (item) {
             if (item.eventType === 2) {
@@ -5024,13 +5132,26 @@ var ResultsService = /** @class */ (function () {
                 item.pos = item.competitor.category.pos || 0;
                 _this.items[item.competitorId].events.push(item);
                 _this.items[item.competitorId].t = item.t;
-                _this.items[item.competitorId].pos = item.competitor.category.pos || 0;
+                _this.items[item.competitorId].pos = 1 * item.competitor.category.pos || 0;
+                _this.items[item.competitorId].categoryId = item.categoryId;
             }
         });
         for (var key in this.items) {
             this.items2.push(this.items[key]);
         }
-        this.items2.sort(function (a, b) { return (a.t - b.t); });
+        var res = 0;
+        var last_categoryId = 0;
+        var firstT = 0;
+        this.items2.sort(function (a, b) { return (a.t - b.t); }).forEach(function (item) {
+            if (item.competitor.categoryId !== last_categoryId)
+                res = 0;
+            item.res = ++res;
+            last_categoryId = item.competitor.categoryId;
+            if (res === 1)
+                firstT = item.t;
+            item.firstT = firstT;
+        });
+        console.log(this.items2);
     };
     ResultsService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -5114,7 +5235,7 @@ var StateService = /** @class */ (function () {
                     categoryName: '',
                     _lap: '',
                 },
-                eventsTimeScale: 10000,
+                eventsTimeScale: 0,
                 eventsLimit: 50,
                 filter: {
                     competitorName: ''
