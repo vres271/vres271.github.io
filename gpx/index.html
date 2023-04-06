@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://mourner.github.io/Leaflet/dist/leaflet.css" />
+    <script src="https://mourner.github.io/Leaflet/dist/leaflet.js"></script>
+    <style>
+        #input-block {
+            grid-area: input;
+        }
+        #output-block {
+            grid-area: output;
+        }
+        #map-block {
+            grid-area: map;
+        }
+      
+        #wrapper{
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-gap: 20px;
+            grid-template-areas: 
+                "input output"
+                "map map"
+                ;
+        }
+        textarea{
+            width: 99%;
+            height: 100%;
+        }
+        #map{
+            width: 99%;
+            height: 50vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="input-block">
+            <textarea name=""  id="input" cols="60" rows="20" placeholder="Содержимое кривого GPX-файла"></textarea>
+        </div>
+        <div id="output-block">
+            <textarea name="" id="output" cols="60" rows="20" placeholder="Исправленное"></textarea>
+        </div>
+        <div id="map-block">
+            <div id="toolbar">
+                <input type="number" id="maxDistance" step="0.0001" placeholder="Макс расстояние между точками" value="0.005">
+                <button id="convertBtn" >Обрезать</button> | 
+            </div>
+            <br>
+            <div id="map"></div>
+        </div>
+    </div>
+</body>
+<script>
+
+    const map = L.map('map');
+    map.setView([55.7422, 37.5719], 11);
+    L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        subdomains: ['a','b','c']
+    }).addTo( map );
+
+
+    const inputElem = document.getElementById('input');
+    const outputElem = document.getElementById('output');
+    const convertBtnElem = document.getElementById('convertBtn');
+    const toolbarElem = document.getElementById('toolbar');
+
+    let resultPolyline = null;
+    let srcPolyline = null;
+    let filename;
+    let downloadLink = null;
+
+    input.ondrop = e => {
+        e.preventDefault();
+        if (e.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            [...e.dataTransfer.items].forEach((item, i) => {
+                // If dropped items aren't files, reject them
+                if (item.kind === "file") {
+                    const file = item.getAsFile();
+                    // console.log(`… file[${i}].name = ${file.name}`, file);
+                    let reader = new FileReader()
+                    reader.readAsText(file)
+                    reader.onloadend = function() {
+                        filename = file.name;
+                        input.value = reader.result;
+                    }           
+                }
+            });
+        }     
+        input.style.backgroundColor = '';
+    }
+
+    input.ondragover = e => {
+        e.preventDefault();
+    }
+
+    input.ondragenter = e => {
+        input.style.backgroundColor = '#00b8ff24';
+    }
+    input.ondragleave = e => {
+        input.style.backgroundColor = '';
+    }
+
+    function distance(point1, point2) {
+        return Math.sqrt( Math.pow(point1.lat - point2.lat, 2) +  Math.pow(point1.lon - point2.lon, 2) )
+    }
+
+    convertBtnElem.onclick = () => {
+        const maxDistance = document.getElementById('maxDistance').value;
+
+        const arr1 = inputElem.value.split('<trkseg>');
+        const arr2 = arr1[1].split('</trkseg>');
+        
+        const trkseg = arr2[0];
+
+        const arr3 = trkseg.split('</trkpt>');
+
+        const srcLatlngs = [];
+
+        let lastOkPoint = null;
+        const resultPoints = trkseg
+            .split('</trkpt>')
+            .map(str => ({
+                lat: str.split('lat="')[1]?.split('"')[0],
+                lon: str.split('lon="')[1]?.split('"')[0],
+                ele: str.split('<ele>')[1]?.split('</ele>')[0],
+                t: str.split('<time>')[1]?.split('</time>')[0],
+                ext: str.split('<extensions>')[1]?.split('</extensions>')[0],
+            }))
+            .filter((point1, i, points) => {
+                if(point1.lat && point1.lon) srcLatlngs.push([1*point1.lat, 1*point1.lon]);                
+
+                if(!lastOkPoint) lastOkPoint = {...point1};
+                if (lastOkPoint) {
+                    const distanceToLastOk = distance(point1, lastOkPoint);
+                    const distanceToPrev = distance(point1, points[i-1] || lastOkPoint);
+                    if (distanceToLastOk < maxDistance && distanceToPrev < maxDistance) {
+                        lastOkPoint = {...point1};
+                        return true;
+                    }
+                }
+                return false;
+            })
+
+        const latlngs = resultPoints.map(point => [1*point.lat, 1*point.lon]);
+        if (resultPolyline) map.removeLayer(resultPolyline)
+        if (srcPolyline) map.removeLayer(srcPolyline)
+        resultPolyline = L.polyline(srcLatlngs, {color: 'red'}).addTo(map);
+        srcPolyline = L.polyline(latlngs, {color: 'green'}).addTo(map);
+        map.fitBounds(srcPolyline.getBounds());
+
+        resultGPX = arr1[0] + '<trkseg>' + resultPoints
+            .map(point => `
+    <trkpt lat="${point.lat}" lon="${point.lon}">
+        <ele>${point.ele}</ele>
+        <time>${point.t}</time>`+(point.ext?`\n<extensions>${point.ext}</extensions>`:'')+`
+    </trkpt>`).join('')
+            +'</trkseg>' + arr2[1];
+
+        outputElem.value = resultGPX;
+
+        if (downloadLink) toolbarElem.removeChild(downloadLink);
+        downloadLink = document.createElement('a');
+        downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(resultGPX));
+        downloadLink.setAttribute('download', filename);
+        downloadLink.textContent = 'Скачать обрезанный файл'
+        // a.style.display = 'none';
+        toolbarElem.appendChild(downloadLink);
+        // a.click();
+
+    }
+</script>
+</html>
